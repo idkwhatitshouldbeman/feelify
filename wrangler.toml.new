@@ -1,6 +1,0 @@
-name = "feelify"
-compatibility_date = "2025-04-08"
-main = "worker.js"
-
-[vars]
-OPENROUTER_API_KEY = "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"
