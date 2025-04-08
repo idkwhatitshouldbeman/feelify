@@ -252,7 +252,8 @@
 
     <script>
         // API Configuration
-        const WORKER_URL = 'YOUR_WORKER_URL'; // You'll get this after deploying the worker
+        const OPENROUTER_API_KEY = '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';
+        const MODEL = 'nvidia/llama-3.1-nemotron-nano-8b-v1:free';
         
         // Spotify Configuration
         const SPOTIFY_CLIENT_ID = 'YOUR_SPOTIFY_CLIENT_ID';
@@ -298,22 +299,40 @@
 
         async function getSongSuggestions(input) {
             try {
-                const response = await fetch(WORKER_URL, {
+                const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
+                        'Content-Type': 'application/json',
+                        'HTTP-Referer': window.location.origin,
+                        'X-Title': 'Feelify'
                     },
                     body: JSON.stringify({
-                        mood: input
+                        model: MODEL,
+                        messages: [{
+                            role: 'system',
+                            content: 'You are a music expert. Return ONLY a JSON array of songs, each with title, artist, genre, and year properties. No other text.'
+                        }, {
+                            role: 'user',
+                            content: `Generate 12 songs that match this mood: ${input}. Format as a valid JSON array like this: [{"title":"Song Name","artist":"Artist Name","genre":"Genre","year":"Year"}]`
+                        }]
                     })
                 });
 
+                const data = await response.json();
                 if (!response.ok) {
-                    throw new Error('Failed to get suggestions');
+                    throw new Error(data.error?.message || 'Failed to get suggestions');
                 }
 
-                const songs = await response.json();
-                return Array.isArray(songs) ? songs : [];
+                try {
+                    const content = data.choices[0].message.content;
+                    // Extract JSON array from the response
+                    const jsonMatch = content.match(/\[([\s\S]*?)\]/); 
+                    return jsonMatch ? JSON.parse(jsonMatch[0]) : [];
+                } catch (e) {
+                    console.error('Parse error:', e);
+                    return [];
+                }
 
                 return parsedSongs;
             } catch (error) {
