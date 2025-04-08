@@ -254,6 +254,47 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+
+        .diagnostics {
+            position: fixed;
+            bottom: 30px;
+            right: 10px;
+            font-size: 12px;
+            color: rgba(16, 185, 129, 0.7);
+            text-align: right;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 10px;
+            border-radius: 4px;
+            max-width: 300px;
+            word-wrap: break-word;
+        }
+
+        .attempt-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+
+        .attempt-active {
+            background-color: #10B981;
+            animation: pulse 1s infinite;
+        }
+
+        .attempt-success {
+            background-color: #10B981;
+        }
+
+        .attempt-failed {
+            background-color: #EF4444;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
     </style>
 </head>
 <body>
@@ -283,7 +324,8 @@
         <input type="text" id="feelInput" placeholder="How are you feeling? (Press Enter)" autofocus>
     </div>
     <div class="suggestions-container" id="suggestions"></div>
-    <div class="version-counter">v3.4</div>
+    <div class="version-counter">v3.5</div>
+    <div id="diagnostics" class="diagnostics"></div>
 
     <script>
         // Worker Configuration
@@ -326,27 +368,151 @@
         const suggestionsContainer = document.getElementById('suggestions');
         const feelInput = document.getElementById('feelInput');
 
+        // Error handling configuration
+        const MAX_RETRIES = 3;
+        const RETRY_DELAY = 1000;
+        const FALLBACK_URL = 'https://openrouter.ai/api/v1/chat/completions';
+        let currentAttempt = 1;
+
+        function updateDiagnostics(attempt, status, details = '') {
+            const diagnostics = document.getElementById('diagnostics');
+            diagnostics.innerHTML = `
+                <div>
+                    <span class="attempt-indicator ${status}"></span>
+                    Attempt ${attempt}/5: ${details}
+                </div>
+            `;
+        }
+
+        async function delay(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
         async function getSongSuggestions(input) {
-            try {
-                const response = await fetch(WORKER_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        mood: input
-                    })
-                });
+            const attempts = [
+                { name: 'Worker API', fn: tryWorkerAPI },
+                { name: 'Direct API', fn: tryDirectAPI },
+                { name: 'Cached Results', fn: tryCachedResults },
+                { name: 'Local Fallback', fn: tryLocalFallback },
+                { name: 'Emergency Mode', fn: tryEmergencyMode }
+            ];
 
-                const data = await response.json();
-                if (!response.ok) {
-                    throw new Error(data.error || 'Failed to get suggestions');
+            for (let i = 0; i < attempts.length; i++) {
+                const attempt = attempts[i];
+                try {
+                    updateDiagnostics(i + 1, 'attempt-active', `Trying ${attempt.name}...`);
+                    const result = await attempt.fn(input);
+                    updateDiagnostics(i + 1, 'attempt-success', `${attempt.name} succeeded`);
+                    return result;
+                } catch (error) {
+                    console.error(`${attempt.name} failed:`, error);
+                    updateDiagnostics(i + 1, 'attempt-failed', error.message);
+                    await delay(RETRY_DELAY);
                 }
+            }
+            throw new Error('All attempts failed');
+        }
 
-                return data;
-            } catch (error) {
-                console.error('Error:', error);
-                throw error;
+        async function tryWorkerAPI(input) {
+            const response = await fetch(WORKER_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ mood: input })
+            });
+
+            if (!response.ok) {
+                const data = await response.json().catch(() => ({}));
+                throw new Error(data.error || `Worker API failed: ${response.status}`);
+            }
+
+            const data = await response.json();
+            return validateSongData(data);
+        }
+
+        async function tryDirectAPI(input) {
+            const response = await fetch(FALLBACK_URL, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
+                    'Content-Type': 'application/json',
+                    'HTTP-Referer': window.location.origin,
+                    'X-Title': 'Feelify'
+                },
+                body: JSON.stringify({
+                    model: 'nvidia/llama-3.1-nemotron-nano-8b-v1:free',
+                    messages: [{
+                        role: 'system',
+                        content: 'You are a music expert. Return ONLY a JSON array of songs.'
+                    }, {
+                        role: 'user',
+                        content: `Generate 12 songs that match this mood: ${input}`
+                    }]
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error('Direct API failed');
+            }
+
+            const data = await response.json();
+            const content = data.choices?.[0]?.message?.content;
+            return validateSongData(extractJSONFromText(content));
+        }
+
+        async function tryCachedResults(input) {
+            const cached = localStorage.getItem(`songs_${input}`);
+            if (cached) {
+                return JSON.parse(cached);
+            }
+            throw new Error('No cached results');
+        }
+
+        function tryLocalFallback(input) {
+            const moodMap = {
+                happy: [0, 1, 2],
+                sad: [3, 4, 5],
+                energetic: [6, 7, 8],
+                relaxed: [9, 10, 11]
+            };
+
+            const mood = Object.keys(moodMap).find(m => input.toLowerCase().includes(m));
+            if (mood) {
+                return moodMap[mood].map(i => songDatabase[i]);
+            }
+            throw new Error('No matching local songs');
+        }
+
+        function tryEmergencyMode(input) {
+            return [{
+                title: 'Emergency Song',
+                artist: 'System',
+                genre: 'Any',
+                year: '2025',
+                description: 'Generated when all other attempts failed'
+            }];
+        }
+
+        function validateSongData(data) {
+            if (!Array.isArray(data)) {
+                throw new Error('Invalid song data format');
+            }
+            return data.map(song => ({
+                title: song.title || 'Unknown Title',
+                artist: song.artist || 'Unknown Artist',
+                genre: song.genre || 'Unknown Genre',
+                year: song.year || 'Unknown Year'
+            }));
+        }
+
+        function extractJSONFromText(text) {
+            try {
+                const match = text.match(/\[([\s\S]*?)\]/);
+                return match ? JSON.parse(match[0]) : [];
+            } catch (e) {
+                console.error('JSON extraction failed:', e);
+                return [];
             }
         }
 
