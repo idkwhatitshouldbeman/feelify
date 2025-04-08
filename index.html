@@ -283,14 +283,12 @@
         <input type="text" id="feelInput" placeholder="How are you feeling? (Press Enter)" autofocus>
     </div>
     <div class="suggestions-container" id="suggestions"></div>
-    <div class="version-counter">v3.2</div>
+    <div class="version-counter">v3.4</div>
 
     <script>
-        // API Configuration
-        const OPENROUTER_API_KEY = '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';
-        const MODEL = 'nvidia/llama-3.1-nemotron-nano-8b-v1:free';
+        // Worker Configuration
+        const WORKER_URL = 'https://feelify.idkwhatitshouldbeman.workers.dev';
         
-        // Spotify Configuration
         // Enhanced song database with more detailed information
         const songDatabase = [
             { title: "Happy", artist: "Pharrell Williams", description: "An upbeat pop song that radiates pure joy and positivity" },
@@ -330,45 +328,25 @@
 
         async function getSongSuggestions(input) {
             try {
-                const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+                const response = await fetch(WORKER_URL, {
                     method: 'POST',
                     headers: {
-                        'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
-                        'Content-Type': 'application/json',
-                        'HTTP-Referer': window.location.origin,
-                        'X-Title': 'Feelify'
+                        'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        model: MODEL,
-                        messages: [{
-                            role: 'system',
-                            content: 'You are a music expert. Return ONLY a JSON array of songs, each with title, artist, genre, and year properties. No other text.'
-                        }, {
-                            role: 'user',
-                            content: `Generate 12 songs that match this mood: ${input}. Format as a valid JSON array like this: [{"title":"Song Name","artist":"Artist Name","genre":"Genre","year":"Year"}]`
-                        }]
+                        mood: input
                     })
                 });
 
                 const data = await response.json();
                 if (!response.ok) {
-                    throw new Error(data.error?.message || 'Failed to get suggestions');
+                    throw new Error(data.error || 'Failed to get suggestions');
                 }
 
-                try {
-                    const content = data.choices[0].message.content;
-                    // Extract JSON array from the response
-                    const jsonMatch = content.match(/\[([\s\S]*?)\]/); 
-                    return jsonMatch ? JSON.parse(jsonMatch[0]) : [];
-                } catch (e) {
-                    console.error('Parse error:', e);
-                    return [];
-                }
-
-                return parsedSongs;
+                return data;
             } catch (error) {
                 console.error('Error:', error);
-                throw new Error(error.message || 'Failed to get song suggestions');
+                throw error;
             }
         }
 
