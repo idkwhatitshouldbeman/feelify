@@ -252,7 +252,7 @@
 
     <script>
         // API Configuration
-        const COHERE_API_KEY = 'Y06zWlwDIs8SlX5cKkeM3kpQeOKS2dTVvmCa3Clp';
+        const OPENAI_API_KEY = 'YOUR_OPENAI_API_KEY';
         
         // Spotify Configuration
         const SPOTIFY_CLIENT_ID = 'YOUR_SPOTIFY_CLIENT_ID';
@@ -298,48 +298,37 @@
 
         async function getSongSuggestions(input) {
             try {
-                const response = await fetch('https://api.cohere.ai/v1/generate', {
+                const response = await fetch('https://api.openai.com/v1/chat/completions', {
                     method: 'POST',
                     headers: {
-                        'Authorization': `Bearer ${COHERE_API_KEY}`,
-                        'Content-Type': 'application/json',
-                        'Cohere-Version': '2022-12-06'
+                        'Authorization': `Bearer ${OPENAI_API_KEY}`,
+                        'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        model: 'command',
-                        prompt: `Generate a list of songs that match this feeling or mood: "${input}". Format each song as JSON data like this:
-{"title": "Song Name", "artist": "Artist Name", "genre": "Genre", "year": "Year"}
-
-Generate 12 songs that match the mood. Make sure each suggestion is a real song and genuinely matches the emotional state. Format as a valid JSON array.`,
-                        max_tokens: 2000,
-                        temperature: 0.75
+                        model: 'gpt-3.5-turbo',
+                        messages: [{
+                            role: 'system',
+                            content: 'You are a music expert. Respond only with a JSON array of songs.'
+                        }, {
+                            role: 'user',
+                            content: `Generate 12 songs that match this mood: ${input}. Return only a JSON array with each song having title, artist, genre, and year.`
+                        }],
+                        temperature: 0.7
                     })
                 });
 
                 const data = await response.json();
                 if (!response.ok) {
-                    throw new Error(data.message || 'Failed to get suggestions');
+                    throw new Error(data.error?.message || 'Failed to get suggestions');
                 }
 
-                const suggestions = data.generations[0].text;
-                let parsedSongs;
                 try {
-                    // Clean up the response to ensure it's valid JSON
-                    const cleanedJson = suggestions.replace(/^[\s\S]*?\[/, '[').replace(/\][\s\S]*$/, ']');
-                    parsedSongs = JSON.parse(cleanedJson);
+                    const content = data.choices[0].message.content;
+                    const jsonMatch = content.match(/\[([\s\S]*?)\]/); // Extract JSON array
+                    return JSON.parse(jsonMatch ? jsonMatch[0] : content);
                 } catch (e) {
-                    console.log('Failed to parse JSON, falling back to regex');
-                    const songRegex = /\{"title":"([^"]+)","artist":"([^"]+)","genre":"([^"]+)","year":"([^"]+)"\}/g;
-                    parsedSongs = [];
-                    let match;
-                    while ((match = songRegex.exec(suggestions)) !== null) {
-                        parsedSongs.push({
-                            title: match[1],
-                            artist: match[2],
-                            genre: match[3],
-                            year: match[4]
-                        });
-                    }
+                    console.error('Parse error:', e);
+                    return [];
                 }
 
                 return parsedSongs;
