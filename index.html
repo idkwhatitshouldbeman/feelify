@@ -204,6 +204,21 @@
             border-radius: 8px;
             margin: 20px auto;
             max-width: 400px;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .version-counter {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            font-size: 12px;
+            color: rgba(16, 185, 129, 0.5);
+            font-family: monospace;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .loading {
@@ -286,6 +301,7 @@
     </div>
     <button class="spotify-login" id="spotifyLogin">Connect Spotify</button>
     <div class="suggestions-container" id="suggestions"></div>
+    <div class="version-counter">v3.2</div>
 
     <script>
         // API Configuration
@@ -402,10 +418,19 @@
                     if (currentSuggestions.length > 0) {
                         currentSuggestions.forEach(displaySuggestion);
                     } else {
-                        suggestionsContainer.innerHTML = '<div class="error-message">No songs found for this mood. Try a different feeling!</div>';
+                        throw new Error('No songs found for this mood. Try expressing your feeling differently.');
                     }
                 } catch (error) {
-                    suggestionsContainer.innerHTML = '<div class="error-message">Oops! Something went wrong. Please try again.</div>';
+                    console.error('Error:', error);
+                    let errorMessage = error.message;
+                    if (errorMessage.includes('Failed to fetch')) {
+                        errorMessage = 'Unable to connect to the server. Please check your internet connection.';
+                    } else if (errorMessage.includes('rate limit')) {
+                        errorMessage = 'We\'re getting too many requests. Please wait a moment and try again.';
+                    } else if (errorMessage.includes('token')) {
+                        errorMessage = 'There\'s an issue with the API connection. Please try again later.';
+                    }
+                    suggestionsContainer.innerHTML = `<div class="error-message">${errorMessage}</div>`;
                 } finally {
                     feelInput.disabled = false;
                     feelInput.focus();
