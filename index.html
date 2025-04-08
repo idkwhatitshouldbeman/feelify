@@ -261,12 +261,22 @@
             right: 10px;
             font-size: 12px;
             color: rgba(16, 185, 129, 0.7);
-            text-align: right;
+            text-align: left;
             background: rgba(0, 0, 0, 0.8);
             padding: 10px;
             border-radius: 4px;
             max-width: 300px;
             word-wrap: break-word;
+        }
+
+        .attempt-row {
+            margin: 4px 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .attempt-pending {
+            background-color: rgba(16, 185, 129, 0.2);
         }
 
         .attempt-indicator {
@@ -324,7 +334,7 @@
         <input type="text" id="feelInput" placeholder="How are you feeling? (Press Enter)" autofocus>
     </div>
     <div class="suggestions-container" id="suggestions"></div>
-    <div class="version-counter">v3.5</div>
+    <div class="version-counter">v3.6</div>
     <div id="diagnostics" class="diagnostics"></div>
 
     <script>
@@ -374,14 +384,25 @@
         const FALLBACK_URL = 'https://openrouter.ai/api/v1/chat/completions';
         let currentAttempt = 1;
 
+        const attempts = [
+            { name: 'Worker API', status: '', details: 'Not tried yet' },
+            { name: 'Direct API', status: '', details: 'Not tried yet' },
+            { name: 'Cached Results', status: '', details: 'Not tried yet' },
+            { name: 'Local Fallback', status: '', details: 'Not tried yet' },
+            { name: 'Emergency Mode', status: '', details: 'Not tried yet' }
+        ];
+
         function updateDiagnostics(attempt, status, details = '') {
             const diagnostics = document.getElementById('diagnostics');
-            diagnostics.innerHTML = `
-                <div>
-                    <span class="attempt-indicator ${status}"></span>
-                    Attempt ${attempt}/5: ${details}
+            attempts[attempt - 1].status = status;
+            attempts[attempt - 1].details = details;
+
+            diagnostics.innerHTML = attempts.map((a, i) => `
+                <div class="attempt-row">
+                    <span class="attempt-indicator ${a.status || 'attempt-pending'}"></span>
+                    ${a.name}: ${a.details}
                 </div>
-            `;
+            `).join('');
         }
 
         async function delay(ms) {
@@ -389,7 +410,7 @@
         }
 
         async function getSongSuggestions(input) {
-            const attempts = [
+            const attemptFns = [
                 { name: 'Worker API', fn: tryWorkerAPI },
                 { name: 'Direct API', fn: tryDirectAPI },
                 { name: 'Cached Results', fn: tryCachedResults },
@@ -397,12 +418,15 @@
                 { name: 'Emergency Mode', fn: tryEmergencyMode }
             ];
 
-            for (let i = 0; i < attempts.length; i++) {
-                const attempt = attempts[i];
+            // Reset all attempt statuses
+            attempts.forEach((a, i) => updateDiagnostics(i + 1, '', 'Not tried yet'));
+
+            for (let i = 0; i < attemptFns.length; i++) {
+                const attempt = attemptFns[i];
                 try {
-                    updateDiagnostics(i + 1, 'attempt-active', `Trying ${attempt.name}...`);
+                    updateDiagnostics(i + 1, 'attempt-active', `Trying now...`);
                     const result = await attempt.fn(input);
-                    updateDiagnostics(i + 1, 'attempt-success', `${attempt.name} succeeded`);
+                    updateDiagnostics(i + 1, 'attempt-success', `Success`);
                     return result;
                 } catch (error) {
                     console.error(`${attempt.name} failed:`, error);
