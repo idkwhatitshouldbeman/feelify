@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feelify</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #000000;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            color: #10B981;
+            overflow-x: hidden;
+        }
+
+        .title-container {
+            margin: 50px 0;
+            position: relative;
+            width: 800px;
+            height: 200px;
+        }
+
+        .title-path {
+            fill: none;
+            stroke: rgba(16, 185, 129, 0.15);
+            stroke-width: 2;
+            font-family: system-ui, -apple-system;
+            font-weight: 200;
+        }
+
+        .glow-path {
+            fill: none;
+            stroke: #10B981;
+            stroke-width: 2;
+            filter: url(#glow);
+        }
+
+        .input-container {
+            width: 100%;
+            max-width: 500px;
+            padding: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 15px;
+            font-size: 18px;
+            background: transparent;
+            border: 2px solid #10B981;
+            border-radius: 8px;
+            color: #10B981;
+            transition: all 0.3s ease;
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        input[type="text"]:focus {
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.5);
+            border-color: #10B981;
+        }
+
+        input[type="text"]::placeholder {
+            color: rgba(16, 185, 129, 0.5);
+        }
+
+        .spotify-login {
+            margin: 20px 0;
+            padding: 12px 24px;
+            background: #10B981;
+            color: black;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .spotify-login:hover {
+            background: #0D9668;
+            transform: translateY(-1px);
+        }
+
+        .suggestions-container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 20px auto 40px;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .suggestion {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            margin: 10px 0;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .suggestion::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(16, 185, 129, 0.1);
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+        }
+
+        .suggestion:hover::before {
+            transform: translateX(0);
+        }
+
+        .suggestion:hover {
+            border-color: #10B981;
+            transform: translateY(-2px);
+        }
+
+        .album-art {
+            width: 50px;
+            height: 50px;
+            border-radius: 4px;
+            margin-right: 15px;
+            background: linear-gradient(45deg, #10B981, #065F46);
+            position: relative;
+            z-index: 1;
+        }
+
+        .suggestion-info {
+            flex-grow: 1;
+            position: relative;
+            z-index: 1;
+        }
+
+        .song-title {
+            font-size: 16px;
+            margin: 0;
+            font-weight: 500;
+        }
+
+        .artist {
+            font-size: 14px;
+            color: rgba(16, 185, 129, 0.7);
+            margin: 4px 0 0 0;
+        }
+
+        .song-card {
+            background: rgba(16, 185, 129, 0.05);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .song-card:hover {
+            transform: translateY(-2px);
+            background: rgba(16, 185, 129, 0.1);
+            border-color: rgba(16, 185, 129, 0.4);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.1);
+        }
+
+        .song-title {
+            font-size: 18px;
+            color: rgba(16, 185, 129, 1);
+            margin: 0 0 8px 0;
+            font-weight: 600;
+        }
+
+        .song-artist {
+            font-size: 16px;
+            color: rgba(16, 185, 129, 0.8);
+            margin: 0 0 12px 0;
+        }
+
+        .song-details {
+            font-size: 14px;
+            color: rgba(16, 185, 129, 0.6);
+            margin: 0;
+            line-height: 1.4;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: rgba(16, 185, 129, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .loading::after {
+            content: '';
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(16, 185, 129, 0.3);
+            border-top: 2px solid #10B981;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="title-container">
+        <svg viewBox="0 0 800 200">
+            <defs>
+                <filter id="glow">
+                    <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur" />
+                    <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                </filter>
+                <mask id="hover-mask">
+                    <rect width="100%" height="100%" fill="white"/>
+                    <circle id="mask-circle" r="50" cx="-100" cy="-100" fill="black"/>
+                </mask>
+            </defs>
+            <text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" 
+                  font-size="140px" class="title-path">
+                Feelify
+            </text>
+            <text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" 
+                  font-size="140px" class="glow-path" mask="url(#hover-mask)">
+                Feelify
+            </text>
+        </svg>
+    </div>
+    <div class="input-container">
+        <input type="text" id="feelInput" placeholder="How are you feeling? (Press Enter)" autofocus>
+    </div>
+    <button class="spotify-login" id="spotifyLogin">Connect Spotify</button>
+    <div class="suggestions-container" id="suggestions"></div>
+
+    <script>
+        // API Configuration
+        const COHERE_API_KEY = 'Y06zWlwDIs8SlX5cKkeM3kpQeOKS2dTVvmCa3Clp';
+        
+        // Spotify Configuration
+        const SPOTIFY_CLIENT_ID = 'YOUR_SPOTIFY_CLIENT_ID';
+        const SPOTIFY_REDIRECT_URI = window.location.origin + window.location.pathname;
+        let spotifyAccessToken = null;
+
+        // Enhanced song database with more detailed information
+        const songDatabase = [
+            { title: "Happy", artist: "Pharrell Williams", description: "An upbeat pop song that radiates pure joy and positivity" },
+            { title: "Don't Stop Believin'", artist: "Journey", description: "An inspiring rock anthem about hope and perseverance" },
+            { title: "Dancing Queen", artist: "ABBA", description: "A vibrant disco hit that makes you want to dance" },
+            { title: "Walking on Sunshine", artist: "Katrina & The Waves", description: "A cheerful pop song about feeling on top of the world" },
+            { title: "I Wanna Dance with Somebody", artist: "Whitney Houston", description: "An energetic pop anthem about finding love and joy in dancing" },
+            { title: "Sweet Dreams", artist: "Eurythmics", description: "A haunting synth-pop classic with a dreamy, mysterious atmosphere" },
+            { title: "I Will Survive", artist: "Gloria Gaynor", description: "A powerful disco anthem about overcoming heartbreak and finding strength" },
+            { title: "Eye of the Tiger", artist: "Survivor", description: "A powerful rock anthem that fuels determination and strength" },
+            { title: "Stayin' Alive", artist: "Bee Gees", description: "A groovy disco classic that exudes confidence and style" },
+            { title: "Good Vibrations", artist: "The Beach Boys", description: "A feel-good summer hit with uplifting harmonies" }
+        ];
+
+        // Handle title glow effect
+        const titleContainer = document.querySelector('.title-container');
+        const maskCircle = document.querySelector('#mask-circle');
+        
+        titleContainer.addEventListener('mousemove', (e) => {
+            const rect = titleContainer.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            maskCircle.setAttribute('cx', x);
+            maskCircle.setAttribute('cy', y);
+        });
+
+        titleContainer.addEventListener('mouseleave', () => {
+            maskCircle.setAttribute('cx', -100);
+            maskCircle.setAttribute('cy', -100);
+        });
+
+        // Handle song suggestions
+        let currentSuggestions = [];
+        const suggestionsContainer = document.getElementById('suggestions');
+        const feelInput = document.getElementById('feelInput');
+
+        async function getSongSuggestions(input) {
+            try {
+                const response = await fetch('https://api.cohere.ai/v1/generate', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${COHERE_API_KEY}`,
+                        'Content-Type': 'application/json',
+                        'Cohere-Version': '2022-12-06'
+                    },
+                    body: JSON.stringify({
+                        model: 'command',
+                        prompt: `Generate a list of songs that match this feeling or mood: "${input}". Format each song as JSON data like this:
+{"title": "Song Name", "artist": "Artist Name", "genre": "Genre", "year": "Year"}
+
+Generate 12 songs that match the mood. Make sure each suggestion is a real song and genuinely matches the emotional state. Format as a valid JSON array.`,
+                        max_tokens: 2000,
+                        temperature: 0.75
+                    })
+                });
+
+                const data = await response.json();
+                if (!response.ok) {
+                    throw new Error(data.message || 'Failed to get suggestions');
+                }
+
+                const suggestions = data.generations[0].text;
+                let parsedSongs;
+                try {
+                    // Clean up the response to ensure it's valid JSON
+                    const cleanedJson = suggestions.replace(/^[\s\S]*?\[/, '[').replace(/\][\s\S]*$/, ']');
+                    parsedSongs = JSON.parse(cleanedJson);
+                } catch (e) {
+                    console.log('Failed to parse JSON, falling back to regex');
+                    const songRegex = /\{"title":"([^"]+)","artist":"([^"]+)","genre":"([^"]+)","year":"([^"]+)"\}/g;
+                    parsedSongs = [];
+                    let match;
+                    while ((match = songRegex.exec(suggestions)) !== null) {
+                        parsedSongs.push({
+                            title: match[1],
+                            artist: match[2],
+                            genre: match[3],
+                            year: match[4]
+                        });
+                    }
+                }
+
+                return parsedSongs;
+            } catch (error) {
+                console.error('Error:', error);
+                throw new Error(error.message || 'Failed to get song suggestions');
+            }
+        }
+
+        function displaySuggestion(song) {
+            const div = document.createElement('div');
+            div.className = 'song-card';
+            div.innerHTML = `
+                <h3 class="song-title">${song.title}</h3>
+                <p class="song-artist">${song.artist}</p>
+                <p class="song-details">${song.genre} • ${song.year}</p>
+            `;
+            suggestionsContainer.appendChild(div);
+        }
+
+        async function handleInput() {
+            const input = feelInput.value.trim();
+            if (input.length > 0) {
+                feelInput.disabled = true;
+                suggestionsContainer.innerHTML = '<div class="loading">Finding the perfect songs for your mood...</div>';
+                try {
+                    currentSuggestions = await getSongSuggestions(input);
+                    suggestionsContainer.innerHTML = '';
+                    if (currentSuggestions.length > 0) {
+                        currentSuggestions.forEach(displaySuggestion);
+                    } else {
+                        suggestionsContainer.innerHTML = '<div class="loading">No matching songs found</div>';
+                    }
+                } catch (error) {
+                    suggestionsContainer.innerHTML = '<div class="loading">Error getting suggestions. Please try again.</div>';
+                } finally {
+                    feelInput.disabled = false;
+                    feelInput.focus();
+                }
+            } else {
+                suggestionsContainer.innerHTML = '';
+            }
+        }
+
+        // Handle Enter key only
+        feelInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                handleInput();
+            }
+        });
+
+        // Infinite scroll simulation
+        let isLoading = false;
+        window.addEventListener('scroll', () => {
+            if (!isLoading && (window.innerHeight + window.scrollY) >= document.body.offsetHeight - 100) {
+                isLoading = true;
+                const loadingMsg = document.createElement('div');
+                loadingMsg.className = 'loading';
+                loadingMsg.textContent = 'Loading more suggestions...';
+                suggestionsContainer.appendChild(loadingMsg);
+                
+                setTimeout(() => {
+                    loadingMsg.remove();
+                    currentSuggestions.forEach(displaySuggestion);
+                    isLoading = false;
+                }, 800);
+            }
+        });
+
+        // Spotify Authentication
+        function generateRandomString(length) {
+            const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            return Array.from(crypto.getRandomValues(new Uint8Array(length)))
+                .map(x => possible[x % possible.length])
+                .join('');
+        }
+
+        async function generateCodeChallenge(codeVerifier) {
+            const digest = await crypto.subtle.digest('SHA-256',
+                new TextEncoder().encode(codeVerifier));
+            return btoa(String.fromCharCode(...new Uint8Array(digest)))
+                .replace(/\+/g, '-')
+                .replace(/\//g, '_')
+                .replace(/=+$/, '');
+        }
+
+        async function handleSpotifyLogin() {
+            if (!SPOTIFY_CLIENT_ID || SPOTIFY_CLIENT_ID === 'YOUR_SPOTIFY_CLIENT_ID') {
+                alert('Please set up your Spotify Client ID first');
+                return;
+            }
+
+            const codeVerifier = generateRandomString(64);
+            const codeChallenge = await generateCodeChallenge(codeVerifier);
+            const state = generateRandomString(16);
+            const scope = 'user-read-private user-read-email playlist-modify-public playlist-modify-private';
+
+            localStorage.setItem('code_verifier', codeVerifier);
+            localStorage.setItem('state', state);
+
+            const params = new URLSearchParams({
+                client_id: SPOTIFY_CLIENT_ID,
+                response_type: 'code',
+                redirect_uri: SPOTIFY_REDIRECT_URI,
+                state: state,
+                scope: scope,
+                code_challenge_method: 'S256',
+                code_challenge: codeChallenge
+            });
+
+            window.location = `https://accounts.spotify.com/authorize?${params.toString()}`;
+        }
+
+        // Handle Spotify redirect
+        async function handleSpotifyRedirect() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const code = urlParams.get('code');
+            const state = urlParams.get('state');
+            const storedState = localStorage.getItem('state');
+            const codeVerifier = localStorage.getItem('code_verifier');
+
+            if (code && state === storedState) {
+                try {
+                    const response = await fetch('https://accounts.spotify.com/api/token', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        body: new URLSearchParams({
+                            client_id: SPOTIFY_CLIENT_ID,
+                            grant_type: 'authorization_code',
+                            code: code,
+                            redirect_uri: SPOTIFY_REDIRECT_URI,
+                            code_verifier: codeVerifier
+                        })
+                    });
+
+                    const data = await response.json();
+                    if (response.ok) {
+                        spotifyAccessToken = data.access_token;
+                        document.getElementById('spotifyLogin').textContent = 'Connected to Spotify';
+                        document.getElementById('spotifyLogin').disabled = true;
+                    }
+                } catch (error) {
+                    console.error('Error getting access token:', error);
+                }
+
+                // Clean up
+                localStorage.removeItem('code_verifier');
+                localStorage.removeItem('state');
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
+        }
+
+        // Spotify login handler
+        document.getElementById('spotifyLogin').addEventListener('click', handleSpotifyLogin);
+
+        // Check for Spotify redirect on page load
+        if (window.location.search.includes('code=')) {
+            handleSpotifyRedirect();
+        }
+    </script>
+</body>
+</html>
