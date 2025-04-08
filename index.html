@@ -195,15 +195,52 @@
             line-height: 1.4;
         }
 
+        .error-message {
+            text-align: center;
+            padding: 20px;
+            color: rgba(255, 99, 71, 0.8);
+            font-size: 16px;
+            background: rgba(255, 99, 71, 0.1);
+            border-radius: 8px;
+            margin: 20px auto;
+            max-width: 400px;
+        }
+
         .loading {
             text-align: center;
             padding: 20px;
-            color: rgba(16, 185, 129, 0.7);
+            color: rgba(16, 185, 129, 0.9);
+            font-size: 18px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 12px;
         }
+
+        .loading::after {
+            content: '';
+            display: inline-block;
+            width: 4px;
+            height: 4px;
+            background-color: currentColor;
+            border-radius: 50%;
+            animation: dots 1.4s infinite ease-in-out;
+            margin-left: 6px;
+        }
+
+        @keyframes dots {
+            0%, 80%, 100% { 
+                box-shadow: -10px 0 0 -4px currentColor, 0 0 0 currentColor, 10px 0 0 -4px currentColor;
+            }
+            40% { 
+                box-shadow: -10px 0 0 currentColor, 0 0 0 currentColor, 10px 0 0 -4px currentColor;
+            }
+            60% { 
+                box-shadow: -10px 0 0 -4px currentColor, 0 0 0 currentColor, 10px 0 0 currentColor;
+            }
+        }
+
+
 
         .loading::after {
             content: '';
@@ -356,17 +393,19 @@
             const input = feelInput.value.trim();
             if (input.length > 0) {
                 feelInput.disabled = true;
-                suggestionsContainer.innerHTML = '<div class="loading">Finding the perfect songs for your mood...</div>';
+                suggestionsContainer.innerHTML = `
+                    <div class="loading">Finding the perfect songs for your mood</div>
+                `;
                 try {
                     currentSuggestions = await getSongSuggestions(input);
                     suggestionsContainer.innerHTML = '';
                     if (currentSuggestions.length > 0) {
                         currentSuggestions.forEach(displaySuggestion);
                     } else {
-                        suggestionsContainer.innerHTML = '<div class="loading">No matching songs found</div>';
+                        suggestionsContainer.innerHTML = '<div class="error-message">No songs found for this mood. Try a different feeling!</div>';
                     }
                 } catch (error) {
-                    suggestionsContainer.innerHTML = '<div class="loading">Error getting suggestions. Please try again.</div>';
+                    suggestionsContainer.innerHTML = '<div class="error-message">Oops! Something went wrong. Please try again.</div>';
                 } finally {
                     feelInput.disabled = false;
                     feelInput.focus();
