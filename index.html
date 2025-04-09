@@ -314,7 +314,9 @@
 
             // Removed debug issue updates
 
+            // *** MODIFIED: Enhanced system prompt to focus on feeling ***
             const systemPrompt = `You are a helpful assistant that suggests songs based on a user's mood.
+Focus on the underlying emotion or vibe conveyed by the user's input, not just the literal words used. Interpret the feeling and find songs that match that mood.
 Respond ONLY with a valid JSON array of song objects. Each object must have the following keys: "title", "artist", "genre", and "year".
 Do not include any introductory text, explanations, markdown formatting (like \`\`\`json), or anything else outside the JSON array.
 Example format: [{"title": "Song Title", "artist": "Artist Name", "genre": "Pop", "year": "2020"}]`;
@@ -336,11 +338,12 @@ Example format: [{"title": "Song Title", "artist": "Artist Name", "genre": "Pop"
                             model: AIMLAPI_MODEL,
                             messages: [
                                 { role: "system", content: systemPrompt },
-                                // *** REVERTED: Request 15 songs instead of 100 ***
-                                { role: "user", content: `Suggest 15 songs for someone feeling: ${input}` }
+                                // *** MODIFIED: Request 36 songs ***
+                                { role: "user", content: `Suggest 36 songs for someone feeling: ${input}` }
                             ],
                             // temperature: 0.7, // Optional: Adjust creativity
-                            // max_tokens: 1500 // Optional: Can adjust if needed for 15 songs, but likely okay
+                            // *** ADDED: Set max_tokens for potentially longer response ***
+                            max_tokens: 2500
                         })
                     });
 
@@ -557,15 +560,15 @@ Example format: [{"title": "Song Title", "artist": "Artist Name", "genre": "Pop"
                 clearSuggestions(); // Clear loading message
 
                 if (currentSuggestions && currentSuggestions.length > 0) {
-                    currentSuggestions.forEach(displaySuggestion);
-                } else {
                     // Check if it was the emergency song specifically
-                    if (currentSuggestions && currentSuggestions.length === 1 && currentSuggestions[0].title === 'Emergency Song') {
+                    if (currentSuggestions.length === 1 && currentSuggestions[0].title === 'Emergency Song') {
                          displayError('Could not fetch suggestions. Displaying fallback.');
                     } else {
-                         displayError('No songs found for this mood. Try expressing your feeling differently.');
+                         currentSuggestions.forEach(displaySuggestion);
                     }
-                    // Removed check for specific attempt status
+                } else {
+                    // Handle cases where API returns empty array or validation fails completely
+                    displayError('No songs found for this mood. Try expressing your feeling differently.');
                 }
             } catch (error) {
                 console.error('Error in handleInput:', error);
