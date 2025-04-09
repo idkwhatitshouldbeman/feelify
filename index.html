@@ -231,7 +231,7 @@
     <div class="suggestions-container" id="suggestions" aria-live="polite"></div>
 
     <!-- Removed Diagnostics and Debug Panels -->
-    <div class="version-counter">v4.0-Aesthetics</div> <!-- Updated version -->
+    <div class="version-counter">v4.0-Aesthetics</div> <!-- Kept version -->
 
     <script>
         // --- Configuration ---
@@ -287,8 +287,10 @@
                     // Cache successful results from API (first attempt)
                     if (i === 0 && result && result.length > 0) {
                          try {
-                            localStorage.setItem(`songs_${input}`, JSON.stringify(result));
-                            console.log('Cached results successfully.');
+                            // Use a consistent key format for caching
+                            const cacheKey = `songs_${input.toLowerCase().trim()}`;
+                            localStorage.setItem(cacheKey, JSON.stringify(result));
+                            console.log(`Cached results successfully for key: ${cacheKey}`);
                          } catch (e) {
                             console.warn('Failed to cache results:', e.message);
                          }
@@ -334,11 +336,11 @@ Example format: [{"title": "Song Title", "artist": "Artist Name", "genre": "Pop"
                             model: AIMLAPI_MODEL,
                             messages: [
                                 { role: "system", content: systemPrompt },
-                                // *** MODIFIED: Request 100 songs ***
-                                { role: "user", content: `Suggest 100 songs for someone feeling: ${input}` }
+                                // *** REVERTED: Request 15 songs instead of 100 ***
+                                { role: "user", content: `Suggest 15 songs for someone feeling: ${input}` }
                             ],
                             // temperature: 0.7, // Optional: Adjust creativity
-                            // max_tokens: 3000 // Optional: Increase if 100 songs might exceed default limit
+                            // max_tokens: 1500 // Optional: Can adjust if needed for 15 songs, but likely okay
                         })
                     });
 
@@ -418,8 +420,8 @@ Example format: [{"title": "Song Title", "artist": "Artist Name", "genre": "Pop"
                     if (attempt === MAX_RETRIES) {
                         throw error; // Throw the final error after all retries
                     }
-                     // Only retry on rate limit errors
-                     if (!error.message.includes('Rate limit exceeded')) {
+                     // Only retry on rate limit errors specifically
+                     if (!error.message.includes('Rate limit') && !error.message.includes('429')) {
                          throw error; // Fail fast on non-retriable errors for this attempt
                      }
                      // If rate limited, the 'continue' handles the retry delay.
@@ -432,20 +434,24 @@ Example format: [{"title": "Song Title", "artist": "Artist Name", "genre": "Pop"
 
         async function tryCachedResults(input) {
             try {
-                const cached = localStorage.getItem(`songs_${input}`);
+                // Use a consistent key format for retrieval
+                const cacheKey = `songs_${input.toLowerCase().trim()}`;
+                const cached = localStorage.getItem(cacheKey);
                 if (cached) {
                     // Removed debug issue update
-                    console.log('Using cached results.');
+                    console.log(`Using cached results for key: ${cacheKey}`);
                     const songs = JSON.parse(cached);
                     // Removed debug issue update
-                    return songs;
+                    // Re-validate cached data in case format changed or cache got corrupted
+                    return validateSongData(songs);
                 } else {
                     // Removed debug issue update
-                    throw new Error('No cached results');
+                    throw new Error(`No cached results found for key: ${cacheKey}`);
                 }
             } catch (e) {
                  // Removed debug issue updates
-                 throw new Error('Failed to retrieve cached results');
+                 console.error("Error retrieving or parsing cached results:", e);
+                 throw new Error('Failed to retrieve or use cached results');
             }
         }
 
@@ -553,7 +559,12 @@ Example format: [{"title": "Song Title", "artist": "Artist Name", "genre": "Pop"
                 if (currentSuggestions && currentSuggestions.length > 0) {
                     currentSuggestions.forEach(displaySuggestion);
                 } else {
-                    displayError('No songs found for this mood. Try expressing your feeling differently.');
+                    // Check if it was the emergency song specifically
+                    if (currentSuggestions && currentSuggestions.length === 1 && currentSuggestions[0].title === 'Emergency Song') {
+                         displayError('Could not fetch suggestions. Displaying fallback.');
+                    } else {
+                         displayError('No songs found for this mood. Try expressing your feeling differently.');
+                    }
                     // Removed check for specific attempt status
                 }
             } catch (error) {
@@ -570,7 +581,11 @@ Example format: [{"title": "Song Title", "artist": "Artist Name", "genre": "Pop"
                      userErrorMessage = 'Could not find suggestions using any method. Please try again later.';
                 } else if (userErrorMessage.includes('Failed to parse song data') || userErrorMessage.includes('Invalid response structure') || userErrorMessage.includes('AI did not return a valid JSON array')) {
                      userErrorMessage = 'Received an unexpected response from the suggestion service. Please try again.';
+                } else if (userErrorMessage.includes('Failed to retrieve or use cached results')) {
+                     userErrorMessage = 'There was an issue retrieving cached suggestions. Trying to fetch fresh ones.'; // Less alarming than a generic error
+                     // Maybe attempt fetch again here, or just let it fail to emergency mode if API also fails
                 }
+
 
                 displayError(userErrorMessage);
             } finally {
