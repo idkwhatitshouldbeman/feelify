@@ -15,314 +15,112 @@
             align-items: center;
             background-color: #000000;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            /* *** REVERTED: Main color to blue *** */
-            color: #39A7FF; /* Was #F472B6 */
+            /* *** BLUE THEME *** */
+            color: #39A7FF;
             overflow-x: hidden; /* Prevent horizontal scroll */
         }
 
         /* --- Title --- */
-        .title-container {
-            margin: 50px 0;
-            position: relative;
-            width: 800px; /* Adjust as needed */
-            height: 200px; /* Adjust as needed */
-            max-width: 90%; /* Ensure responsiveness */
-        }
-
-        .title-path {
-            fill: none;
-            /* *** REVERTED: Subtle stroke to blue *** */
-            stroke: rgba(57, 167, 255, 0.15); /* Was rgba(244, 114, 182, 0.15) */
-            stroke-width: 2;
-            font-family: system-ui, -apple-system; /* Modern font */
-            font-weight: 200; /* Lighter weight */
-        }
-
-        .glow-path {
-            fill: none;
-            /* *** REVERTED: Glow path to blue *** */
-            stroke: #39A7FF; /* Was #F472B6 */
-            stroke-width: 2;
-            filter: url(#glow);
-        }
+        .title-container { margin: 50px 0; position: relative; width: 800px; height: 200px; max-width: 90%; }
+        .title-path { fill: none; stroke: rgba(57, 167, 255, 0.15); stroke-width: 2; font-family: system-ui, -apple-system; font-weight: 200; }
+        .glow-path { fill: none; stroke: #39A7FF; stroke-width: 2; filter: url(#glow); }
 
         /* --- Input --- */
-        .input-container {
-            width: 100%;
-            max-width: 500px; /* Comfortable width */
-            padding: 20px;
-            position: relative; /* For potential future additions */
-            z-index: 2; /* Ensure it's above potential background elements */
-        }
-
-        input[type="text"] {
-            width: 100%;
-            padding: 15px;
-            font-size: 18px;
-            background: transparent; /* Blend with background */
-            /* *** REVERTED: Input border to blue *** */
-            border: 2px solid #39A7FF; /* Was #F472B6 */
-            border-radius: 8px;
-            /* *** REVERTED: Input text color to blue *** */
-            color: #39A7FF; /* Was #F472B6 */
-            transition: all 0.3s ease;
-            outline: none; /* Remove default outline */
-            box-sizing: border-box; /* Include padding/border in width */
-        }
-
-        input[type="text"]:focus {
-            /* *** REVERTED: Input focus glow to blue *** */
-            box-shadow: 0 0 15px rgba(57, 167, 255, 0.5); /* Was rgba(244, 114, 182, 0.5) */
-            /* *** REVERTED: Input focus border to blue *** */
-            border-color: #39A7FF; /* Was #F472B6 */
-        }
-
-        input[type="text"]::placeholder {
-            /* *** REVERTED: Input placeholder to blue *** */
-            color: rgba(57, 167, 255, 0.5); /* Was rgba(244, 114, 182, 0.5) */
-        }
+        .input-container { width: 100%; max-width: 500px; padding: 20px; position: relative; z-index: 2; }
+        input[type="text"] { width: 100%; padding: 15px; font-size: 18px; background: transparent; border: 2px solid #39A7FF; border-radius: 8px; color: #39A7FF; transition: all 0.3s ease; outline: none; box-sizing: border-box; }
+        input[type="text"]:focus { box-shadow: 0 0 15px rgba(57, 167, 255, 0.5); border-color: #39A7FF; }
+        input[type="text"]::placeholder { color: rgba(57, 167, 255, 0.5); }
 
         /* --- Suggestions --- */
-        .suggestions-container {
-            width: 100%;
-            max-width: 1200px; /* Wider container for more cards */
-            margin: 20px auto 40px; /* Center and add spacing */
-            padding: 0 20px; /* Padding on sides */
-            display: grid;
-            /* Responsive grid: fills columns with cards min 250px wide */
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px; /* Space between cards */
-            box-sizing: border-box;
-        }
+        .suggestions-container { width: 100%; max-width: 1200px; margin: 20px auto 40px; padding: 0 20px; display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; box-sizing: border-box; }
 
         /* --- Song Card --- */
-        .song-card {
-            /* *** REVERTED: Song card background to blue tint *** */
-            background: rgba(57, 167, 255, 0.05); /* Was rgba(244, 114, 182, 0.05) */
-            /* *** REVERTED: Song card border to blue tint *** */
-            border: 1px solid rgba(57, 167, 255, 0.2); /* Was rgba(244, 114, 182, 0.2) */
-            border-radius: 12px; /* Softer corners */
-            padding: 20px;
-            /* Added transitions for selection */
-            transition: opacity 0.5s ease, border-color 0.2s ease, background-color 0.2s ease, transform 0.3s ease;
-            cursor: grab; /* Indicate draggable */
-            role: button;
-            tabindex: 0; /* Make it focusable */
-            position: relative; /* Needed for pseudo-elements */
-            user-select: none; /* Prevent text selection during drag */
-            -webkit-user-drag: element; /* Enable dragging */
-        }
-        .song-card:active {
-             cursor: grabbing; /* Indicate grabbing */
-        }
-
-        .song-card:hover, .song-card:focus { /* Add focus style for accessibility */
-            transform: translateY(-2px); /* Slight lift effect */
-            /* *** REVERTED: Song card hover background to blue tint *** */
-            background: rgba(57, 167, 255, 0.1); /* Was rgba(244, 114, 182, 0.1) */
-            /* *** REVERTED: Song card hover border to blue tint *** */
-            border-color: rgba(57, 167, 255, 0.4); /* Was rgba(244, 114, 182, 0.4) */
-            /* *** REVERTED: Song card hover shadow to blue tint *** */
-            box-shadow: 0 4px 12px rgba(57, 167, 255, 0.1); /* Was rgba(244, 114, 182, 0.1) */
-            outline: none; /* Remove default focus outline if custom style is applied */
-        }
-
-        /* Style for selected song cards */
-        .song-card.selected {
-            /* *** REVERTED: Selected border to blue *** */
-            border-color: #39A7FF; /* Was #F472B6 */
-            /* *** REVERTED: Selected background to blue tint *** */
-            background-color: rgba(57, 167, 255, 0.15); /* Was rgba(244, 114, 182, 0.15) */
-            /* *** REVERTED: Selected shadow to blue tint *** */
-            box-shadow: 0 0 10px rgba(57, 167, 255, 0.5); /* Was rgba(244, 114, 182, 0.5) */
-            cursor: pointer; /* Change cursor back for selected items (clickable) */
-        }
-        .song-card.selected::after { /* Optional: Add a checkmark or indicator */
-            content: '✔';
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            /* *** REVERTED: Checkmark to blue *** */
-            color: #39A7FF; /* Was #F472B6 */
-            font-size: 20px;
-            font-weight: bold;
-        }
-
-
-        .song-title { /* Combined styles for title */
-            font-size: 18px;
-            /* *** REVERTED: Song title to blue *** */
-            color: rgba(57, 167, 255, 1); /* Was rgba(244, 114, 182, 1) */
-            margin: 0 0 8px 0; /* Spacing below title */
-            font-weight: 600; /* Bolder title */
-            pointer-events: none; /* Prevent title from interfering with drag */
-        }
-
-        .song-artist { /* Renamed from .artist for consistency */
-            font-size: 16px;
-            /* *** REVERTED: Song artist to blue tint *** */
-            color: rgba(57, 167, 255, 0.8); /* Was rgba(244, 114, 182, 0.8) */
-            margin: 0 0 12px 0; /* Spacing below artist */
-            pointer-events: none; /* Prevent artist from interfering with drag */
-        }
-
-        .song-details {
-            font-size: 14px;
-            /* *** REVERTED: Song details to blue tint *** */
-            color: rgba(57, 167, 255, 0.6); /* Was rgba(244, 114, 182, 0.6) */
-            margin: 0;
-            line-height: 1.4; /* Improve readability */
-            pointer-events: none; /* Prevent details from interfering with drag */
-        }
+        .song-card { background: rgba(57, 167, 255, 0.05); border: 1px solid rgba(57, 167, 255, 0.2); border-radius: 12px; padding: 20px; transition: opacity 0.5s ease, border-color 0.2s ease, background-color 0.2s ease, transform 0.3s ease; cursor: grab; role: button; tabindex: 0; position: relative; user-select: none; -webkit-user-drag: element; }
+        .song-card:active { cursor: grabbing; }
+        .song-card:hover, .song-card:focus { transform: translateY(-2px); background: rgba(57, 167, 255, 0.1); border-color: rgba(57, 167, 255, 0.4); box-shadow: 0 4px 12px rgba(57, 167, 255, 0.1); outline: none; }
+        .song-card.selected { border-color: #39A7FF; background-color: rgba(57, 167, 255, 0.15); box-shadow: 0 0 10px rgba(57, 167, 255, 0.5); cursor: pointer; }
+        .song-card.selected::after { content: '✔'; position: absolute; top: 10px; right: 10px; color: #39A7FF; font-size: 20px; font-weight: bold; }
+        .song-title { font-size: 18px; color: rgba(57, 167, 255, 1); margin: 0 0 8px 0; font-weight: 600; pointer-events: none; }
+        .song-artist { font-size: 16px; color: rgba(57, 167, 255, 0.8); margin: 0 0 12px 0; pointer-events: none; }
+        .song-details { font-size: 14px; color: rgba(57, 167, 255, 0.6); margin: 0; line-height: 1.4; pointer-events: none; }
 
         /* --- UI Feedback --- */
-        .error-message {
-            text-align: center;
-            padding: 20px;
-            color: rgba(255, 99, 71, 0.8); /* Tomato color for errors */
-            font-size: 16px;
-            background: rgba(255, 99, 71, 0.1); /* Subtle error background */
-            border-radius: 8px;
-            margin: 20px auto;
-            max-width: 400px;
-            animation: fadeIn 0.3s ease-out;
-            grid-column: 1 / -1; /* Span across all grid columns */
-        }
+        .error-message { text-align: center; padding: 20px; color: rgba(255, 99, 71, 0.8); font-size: 16px; background: rgba(255, 99, 71, 0.1); border-radius: 8px; margin: 20px auto; max-width: 400px; animation: fadeIn 0.3s ease-out; grid-column: 1 / -1; }
+        .loading { text-align: center; padding: 20px; color: rgba(57, 167, 255, 0.9); font-size: 18px; display: flex; align-items: center; justify-content: center; gap: 12px; grid-column: 1 / -1; }
+        .loading::after { content: ''; width: 20px; height: 20px; border: 2px solid rgba(57, 167, 255, 0.3); border-top: 2px solid #39A7FF; border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .loading {
-            text-align: center;
-            padding: 20px;
-            /* *** REVERTED: Loading text to blue tint *** */
-            color: rgba(57, 167, 255, 0.9); /* Was rgba(244, 114, 182, 0.9) */
-            font-size: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px; /* Space between text and spinner */
-            grid-column: 1 / -1; /* Span across all grid columns */
-        }
-
-        /* Use only the spinner animation */
-        .loading::after {
-            content: '';
-            width: 20px;
-            height: 20px;
-            /* *** REVERTED: Loading spinner border to blue tint *** */
-            border: 2px solid rgba(57, 167, 255, 0.3); /* Was rgba(244, 114, 182, 0.3) */
-            /* *** REVERTED: Loading spinner top border to blue *** */
-            border-top: 2px solid #39A7FF; /* Was #F472B6 */
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* --- Drag/Copy Controls Area --- */
-        #drag-copy-controls {
+        /* --- Controls Area (Combined) --- */
+        #controls-area {
             margin-top: 30px;
             padding: 20px;
-            /* *** REVERTED: Controls background to blue tint *** */
-            background-color: rgba(57, 167, 255, 0.05); /* Was rgba(244, 114, 182, 0.05) */
+            background-color: rgba(57, 167, 255, 0.05); /* Blue tint */
             border-radius: 8px;
             width: 100%;
-            max-width: 600px; /* Wider for instructions */
+            max-width: 600px; /* Wider */
             text-align: center;
             display: none; /* Hidden until suggestions are shown */
         }
-        #drag-copy-instructions {
+        #drag-copy-instructions { font-size: 14px; margin-bottom: 15px; color: rgba(57, 167, 255, 0.8); line-height: 1.5; }
+        #controls-area button { padding: 10px 15px; margin: 5px; border-radius: 20px; border: none; font-size: 16px; cursor: pointer; background-color: #39A7FF; color: #000; transition: background-color 0.2s ease; }
+        #controls-area button:hover:not(:disabled) { background-color: #67BFFF; }
+        #controls-area button:disabled { background-color: #555; color: #aaa; cursor: not-allowed; }
+        #copy-status { margin-top: 10px; font-size: 14px; min-height: 20px; color: rgba(57, 167, 255, 0.9); }
+
+        /* --- Spotify/Email Section --- */
+        #spotify-email-section {
+            margin-top: 25px; /* More space */
+            padding-top: 20px;
+            border-top: 1px solid rgba(57, 167, 255, 0.2); /* Separator */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+         #spotify-email-section label { /* Style label if not visually-hidden */
              font-size: 14px;
-             margin-bottom: 15px;
-             /* *** REVERTED: Instructions text to blue tint *** */
-             color: rgba(57, 167, 255, 0.8); /* Was rgba(244, 114, 182, 0.8) */
-             line-height: 1.5;
-        }
-        #drag-copy-controls button {
-            padding: 10px 15px;
-            margin: 5px;
-            border-radius: 20px;
-            border: none;
+             color: rgba(57, 167, 255, 0.8);
+         }
+        #emailInput {
+            width: 100%;
+            max-width: 350px; /* Slightly wider */
+            padding: 10px 15px; /* Match other inputs */
             font-size: 16px;
-            cursor: pointer;
-            /* *** REVERTED: Button background to blue *** */
-            background-color: #39A7FF; /* Was #F472B6 */
-            color: #000; /* Black text on blue button */
-            transition: background-color 0.2s ease;
+            background: transparent;
+            border: 2px solid #39A7FF;
+            border-radius: 8px;
+            color: #39A7FF;
+            transition: all 0.3s ease;
+            outline: none;
+            box-sizing: border-box;
+            text-align: center; /* Center placeholder */
         }
-        #drag-copy-controls button:hover:not(:disabled) {
-            /* *** REVERTED: Button hover to lighter blue *** */
-            background-color: #67BFFF; /* Was #F8A1C8 */
-        }
-         #drag-copy-controls button:disabled {
-            background-color: #555;
-            color: #aaa;
-            cursor: not-allowed;
-        }
-        #copy-status {
-            margin-top: 15px;
-            font-size: 14px;
-            min-height: 20px; /* Prevent layout shifts */
-            /* *** REVERTED: Status text to blue tint *** */
-            color: rgba(57, 167, 255, 0.9); /* Was rgba(244, 114, 182, 0.9) */
-        }
+        #emailInput:focus { box-shadow: 0 0 15px rgba(57, 167, 255, 0.5); border-color: #39A7FF; }
+        #emailInput::placeholder { color: rgba(57, 167, 255, 0.5); }
+        /* #create-playlist-button styles inherited from #controls-area button */
+        #spotify-status { margin-top: 10px; font-size: 14px; min-height: 20px; color: rgba(57, 167, 255, 0.9); }
 
 
         /* --- Version Counter --- */
-        .version-counter {
-            position: fixed;
-            bottom: 10px;
-            right: 10px;
-            font-size: 12px;
-            /* *** REVERTED: Version counter to blue tint *** */
-            color: rgba(57, 167, 255, 0.5); /* Was rgba(244, 114, 182, 0.5) */
-            font-family: monospace; /* Monospace for version */
-            z-index: 998; /* Keep above most elements */
-        }
-
+        .version-counter { position: fixed; bottom: 10px; right: 10px; font-size: 12px; color: rgba(57, 167, 255, 0.5); font-family: monospace; z-index: 998; }
         /* --- Accessibility --- */
-        .visually-hidden { /* Hide element visually but keep for screen readers */
-            position: absolute;
-            left: -10000px;
-            top: auto;
-            width: 1px;
-            height: 1px;
-            overflow: hidden;
-        }
+        .visually-hidden { position: absolute; left: -10000px; top: auto; width: 1px; height: 1px; overflow: hidden; }
     </style>
 </head>
 <body>
     <div class="title-container">
         <svg viewBox="0 0 800 200" preserveAspectRatio="xMidYMid meet">
             <defs>
-                <filter id="glow">
-                    <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur" />
-                    <feComposite in="SourceGraphic" in2="blur" operator="over" />
-                </filter>
-                <mask id="hover-mask">
-                    <rect width="100%" height="100%" fill="white"/>
-                    <circle id="mask-circle" r="50" cx="-100" cy="-100" fill="black"/>
-                </mask>
+                <filter id="glow"><feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur" /><feComposite in="SourceGraphic" in2="blur" operator="over" /></filter>
+                <mask id="hover-mask"><rect width="100%" height="100%" fill="white"/><circle id="mask-circle" r="50" cx="-100" cy="-100" fill="black"/></mask>
             </defs>
-            <text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle"
-                  font-size="140px" class="title-path">
-                Feelify
-            </text>
-            <text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle"
-                  font-size="140px" class="glow-path" mask="url(#hover-mask)">
-                Feelify
-            </text>
+            <text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" font-size="140px" class="title-path">Feelify</text>
+            <text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" font-size="140px" class="glow-path" mask="url(#hover-mask)">Feelify</text>
         </svg>
     </div>
 
     <div class="input-container">
-        <!-- Add accessible label -->
         <label for="feelInput" class="visually-hidden">How are you feeling?</label>
         <input type="text" id="feelInput" placeholder="How are you feeling? (Press Enter)" autofocus>
     </div>
@@ -330,21 +128,30 @@
     <!-- Suggestions Container -->
     <div class="suggestions-container" id="suggestions" aria-live="polite"></div>
 
-    <!-- Drag/Copy Controls Area (Initially Hidden) -->
-    <div id="drag-copy-controls">
+    <!-- Combined Controls Area (Initially Hidden) -->
+    <div id="controls-area">
         <div id="drag-copy-instructions">
-            <!-- Instructions remain the same -->
+            <!-- Updated Instructions -->
             **Manual Spotify Add:** Drag a song card onto the Spotify app's **Search Bar** to search for it.<br>
             Or, click cards to select, then copy the list and paste into Spotify's Search Bar.<br>
+            **Automatic Spotify Add:** Enter your email below, and we’ll create a private playlist and email you the link.<br>
             *(Direct drag-to-playlist from browser is not possible)*
         </div>
         <button id="copy-selected-button" disabled>Copy Selected to Clipboard</button>
         <div id="copy-status"></div>
+
+        <!-- Spotify/Email Section -->
+        <div id="spotify-email-section">
+            <label for="emailInput">Enter email for automatic playlist:</label>
+            <input type="email" id="emailInput" placeholder="your.email@example.com">
+            <button id="create-playlist-button" disabled>Add to Spotify & Email Link</button>
+            <div id="spotify-status"></div>
+        </div>
     </div>
 
 
     <!-- Version Counter -->
-    <div class="version-counter">v4.4-DragCopyBlue</div> <!-- Updated version -->
+    <div class="version-counter">v4.5-BackendIntegrationBlue</div> <!-- Updated version -->
 
     <script>
         // --- Configuration (AI) ---
@@ -353,210 +160,164 @@
         const AIMLAPI_MODEL = 'gpt-4o';
         const MAX_RETRIES = 3;
         const RETRY_DELAY = 1000;
+        // Backend URL (running on the same machine, port 3000)
+        const BACKEND_URL = 'http://localhost:3000';
 
         // --- DOM Elements ---
         const titleContainer = document.querySelector('.title-container');
         const maskCircle = document.querySelector('#mask-circle');
         const suggestionsContainer = document.getElementById('suggestions');
         const feelInput = document.getElementById('feelInput');
-        // Drag/Copy DOM Elements
-        const dragCopyControls = document.getElementById('drag-copy-controls');
+        // Controls Area Elements
+        const controlsArea = document.getElementById('controls-area');
         const copySelectedButton = document.getElementById('copy-selected-button');
         const copyStatus = document.getElementById('copy-status');
+        // Spotify/Email Elements
+        const emailInput = document.getElementById('emailInput');
+        const createPlaylistButton = document.getElementById('create-playlist-button');
+        const spotifyStatus = document.getElementById('spotify-status');
 
         // --- State Variables ---
         let currentSuggestions = [];
-        let selectedSongData = []; // Store {title, artist} of selected songs
+        let selectedSongData = []; // Store {title, artist} of selected songs for copy
 
         // --- Utility Functions ---
-        async function delay(ms) {
-             return new Promise(resolve => setTimeout(resolve, ms));
-        }
+        async function delay(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
 
         // --- Core AI Logic (Same as before) ---
-
-        async function getSongSuggestions(input) {
+        async function getSongSuggestions(input) { /* ... same as previous version ... */
             const attemptFns = [ { name: 'AIMLAPI', fn: tryAIMLAPI }, { name: 'Cached Results', fn: tryCachedResults }, { name: 'Emergency Mode', fn: tryEmergencyMode } ];
             for (let i = 0; i < attemptFns.length; i++) {
                 const attempt = attemptFns[i];
-                try {
-                    console.log(`Attempting: ${attempt.name}`);
-                    const result = await attempt.fn(input);
-                    if (i === 0 && result && result.length > 0) {
-                         try { const cacheKey = `songs_${input.toLowerCase().trim()}`; localStorage.setItem(cacheKey, JSON.stringify(result)); console.log(`Cached results successfully for key: ${cacheKey}`); } catch (e) { console.warn('Failed to cache results:', e.message); }
-                    }
-                    return result;
-                } catch (error) { console.error(`${attempt.name} failed:`, error); }
-            }
-            throw new Error('All attempts to fetch suggestions failed.');
+                try { console.log(`Attempting: ${attempt.name}`); const result = await attempt.fn(input); if (i === 0 && result && result.length > 0) { try { const cacheKey = `songs_${input.toLowerCase().trim()}`; localStorage.setItem(cacheKey, JSON.stringify(result)); console.log(`Cached results successfully for key: ${cacheKey}`); } catch (e) { console.warn('Failed to cache results:', e.message); } } return result; } catch (error) { console.error(`${attempt.name} failed:`, error); }
+            } throw new Error('All attempts to fetch suggestions failed.');
         }
-
-        async function tryAIMLAPI(input) {
-            if (!AIMLAPI_KEY || AIMLAPI_KEY === '<YOUR_AIMLAPI_KEY>') { throw new Error('AIMLAPI Key is not configured.'); }
-            const systemPrompt = `You are a helpful assistant that suggests songs based on a user's mood. Focus on the underlying emotion or vibe conveyed by the user's input, not just the literal words used. Interpret the feeling and find songs that match that mood. Respond ONLY with a valid JSON array of song objects. Each object must have the following keys: "title", "artist", "genre", and "year". Do not include any introductory text, explanations, markdown formatting (like \`\`\`json), or anything else outside the JSON array. Example format: [{"title": "Song Title", "artist": "Artist Name", "genre": "Pop", "year": "2020"}]`;
-            const apiUrl = `${AIMLAPI_BASE_URL}/chat/completions`;
-            for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
-                try {
-                    console.log(`AIMLAPI attempt ${attempt}/${MAX_RETRIES}`);
-                    const response = await fetch(apiUrl, { method: 'POST', headers: { 'Authorization': `Bearer ${AIMLAPI_KEY}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ model: AIMLAPI_MODEL, messages: [ { role: "system", content: systemPrompt }, { role: "user", content: `Suggest 36 songs for someone feeling: ${input}` } ], max_tokens: 2500 }) });
-                    if (!response.ok) { let errorData = { message: `API request failed with status ${response.status}` }; try { errorData = await response.json(); } catch (e) { console.error("Failed to parse error response body:", response.statusText); } const errorMessage = errorData?.error?.message || errorData?.detail || errorData.message || `HTTP error ${response.status}`; console.error(`AIMLAPI error (${response.status}):`, errorMessage, errorData); if (response.status === 401 || response.status === 403) { throw new Error(`API Key Invalid or Permission Denied: ${errorMessage}`); } if (response.status === 429) { if (attempt < MAX_RETRIES) { const waitTime = RETRY_DELAY * Math.pow(2, attempt -1); console.log(`Rate limited. Retrying in ${waitTime}ms...`); await delay(waitTime); continue; } else { throw new Error(`Rate limit exceeded after ${MAX_RETRIES} attempts.`); } } else { throw new Error(`API Error (${response.status}): ${errorMessage}`); } }
-                    let responseData; try { responseData = await response.json(); } catch (e) { throw new Error('Invalid JSON response from API'); } const aiContent = responseData?.choices?.[0]?.message?.content; if (!aiContent) { throw new Error('Invalid response structure from API'); }
-                    try { const cleanedContent = aiContent.trim().replace(/^```json\s*|```$/g, ''); const songs = JSON.parse(cleanedContent); if (!Array.isArray(songs)) { throw new Error('AI did not return a valid JSON array'); } return validateSongData(songs); } catch (e) { console.error("Failed to parse AI content as JSON:", aiContent, e); throw new Error('Failed to parse song data from AI response'); }
-                } catch (error) { console.error(`AIMLAPI attempt ${attempt} failed:`, error); if (attempt === MAX_RETRIES) { throw error; } if (!error.message.includes('Rate limit') && !error.message.includes('429')) { throw error; } }
-            }
-            throw new Error('AIMLAPI failed after all retries.');
+        async function tryAIMLAPI(input) { /* ... same as previous version ... */
+            if (!AIMLAPI_KEY || AIMLAPI_KEY === '<YOUR_AIMLAPI_KEY>') { throw new Error('AIMLAPI Key is not configured.'); } const systemPrompt = `You are a helpful assistant that suggests songs based on a user's mood. Focus on the underlying emotion or vibe conveyed by the user's input, not just the literal words used. Interpret the feeling and find songs that match that mood. Respond ONLY with a valid JSON array of song objects. Each object must have the following keys: "title", "artist", "genre", and "year". Do not include any introductory text, explanations, markdown formatting (like \`\`\`json), or anything else outside the JSON array. Example format: [{"title": "Song Title", "artist": "Artist Name", "genre": "Pop", "year": "2020"}]`; const apiUrl = `${AIMLAPI_BASE_URL}/chat/completions`; for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) { try { console.log(`AIMLAPI attempt ${attempt}/${MAX_RETRIES}`); const response = await fetch(apiUrl, { method: 'POST', headers: { 'Authorization': `Bearer ${AIMLAPI_KEY}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ model: AIMLAPI_MODEL, messages: [ { role: "system", content: systemPrompt }, { role: "user", content: `Suggest 36 songs for someone feeling: ${input}` } ], max_tokens: 2500 }) }); if (!response.ok) { let errorData = { message: `API request failed with status ${response.status}` }; try { errorData = await response.json(); } catch (e) { console.error("Failed to parse error response body:", response.statusText); } const errorMessage = errorData?.error?.message || errorData?.detail || errorData.message || `HTTP error ${response.status}`; console.error(`AIMLAPI error (${response.status}):`, errorMessage, errorData); if (response.status === 401 || response.status === 403) { throw new Error(`API Key Invalid or Permission Denied: ${errorMessage}`); } if (response.status === 429) { if (attempt < MAX_RETRIES) { const waitTime = RETRY_DELAY * Math.pow(2, attempt -1); console.log(`Rate limited. Retrying in ${waitTime}ms...`); await delay(waitTime); continue; } else { throw new Error(`Rate limit exceeded after ${MAX_RETRIES} attempts.`); } } else { throw new Error(`API Error (${response.status}): ${errorMessage}`); } } let responseData; try { responseData = await response.json(); } catch (e) { throw new Error('Invalid JSON response from API'); } const aiContent = responseData?.choices?.[0]?.message?.content; if (!aiContent) { throw new Error('Invalid response structure from API'); } try { const cleanedContent = aiContent.trim().replace(/^```json\s*|```$/g, ''); const songs = JSON.parse(cleanedContent); if (!Array.isArray(songs)) { throw new Error('AI did not return a valid JSON array'); } return validateSongData(songs); } catch (e) { console.error("Failed to parse AI content as JSON:", aiContent, e); throw new Error('Failed to parse song data from AI response'); } } catch (error) { console.error(`AIMLAPI attempt ${attempt} failed:`, error); if (attempt === MAX_RETRIES) { throw error; } if (!error.message.includes('Rate limit') && !error.message.includes('429')) { throw error; } } } throw new Error('AIMLAPI failed after all retries.');
         }
-
-        async function tryCachedResults(input) {
-            try { const cacheKey = `songs_${input.toLowerCase().trim()}`; const cached = localStorage.getItem(cacheKey); if (cached) { console.log(`Using cached results for key: ${cacheKey}`); const songs = JSON.parse(cached); return validateSongData(songs); } else { throw new Error(`No cached results found for key: ${cacheKey}`); } } catch (e) { console.error("Error retrieving or parsing cached results:", e); throw new Error('Failed to retrieve or use cached results'); }
+        async function tryCachedResults(input) { /* ... same as previous version ... */
+             try { const cacheKey = `songs_${input.toLowerCase().trim()}`; const cached = localStorage.getItem(cacheKey); if (cached) { console.log(`Using cached results for key: ${cacheKey}`); const songs = JSON.parse(cached); return validateSongData(songs); } else { throw new Error(`No cached results found for key: ${cacheKey}`); } } catch (e) { console.error("Error retrieving or parsing cached results:", e); throw new Error('Failed to retrieve or use cached results'); }
         }
-
-        function tryEmergencyMode(input) {
-            console.log('Activating emergency mode.'); return validateSongData([{ title: 'Emergency Song', artist: 'System Fallback', genre: 'Fallback', year: new Date().getFullYear().toString() }]);
+        function tryEmergencyMode(input) { /* ... same as previous version ... */
+             console.log('Activating emergency mode.'); return validateSongData([{ title: 'Emergency Song', artist: 'System Fallback', genre: 'Fallback', year: new Date().getFullYear().toString() }]);
         }
-
-        function validateSongData(data) {
-            if (!Array.isArray(data)) { console.error("Validation Error: Data is not an array", data); return []; } const validated = data.map(song => ({ title: song?.title || 'Unknown Title', artist: song?.artist || 'Unknown Artist', genre: song?.genre || 'Unknown Genre', year: String(song?.year || 'N/A') })).filter(song => song.title !== 'Unknown Title'); if (validated.length !== data.length) { console.warn("Some song entries were filtered during validation due to missing titles."); } else if (validated.length > 0) { console.log("Song data structure appears valid."); } else if (data.length > 0 && validated.length === 0) { console.error("All song entries failed validation (e.g., missing titles)."); } return validated;
+        function validateSongData(data) { /* ... same as previous version ... */
+             if (!Array.isArray(data)) { console.error("Validation Error: Data is not an array", data); return []; } const validated = data.map(song => ({ title: song?.title || 'Unknown Title', artist: song?.artist || 'Unknown Artist', genre: song?.genre || 'Unknown Genre', year: String(song?.year || 'N/A') })).filter(song => song.title !== 'Unknown Title'); if (validated.length !== data.length) { console.warn("Some song entries were filtered during validation due to missing titles."); } else if (validated.length > 0) { console.log("Song data structure appears valid."); } else if (data.length > 0 && validated.length === 0) { console.error("All song entries failed validation (e.g., missing titles)."); } return validated;
         }
 
         // --- UI Functions ---
-
         function displaySuggestion(song) {
             const div = document.createElement('div');
             div.className = 'song-card';
             div.setAttribute('role', 'button');
             div.setAttribute('tabindex', '0');
-            div.dataset.title = song.title; // Store data for selection/drag
+            div.dataset.title = song.title;
             div.dataset.artist = song.artist;
-
-            // Make the card draggable
             div.setAttribute('draggable', 'true');
             div.addEventListener('dragstart', handleDragStart);
-
-            div.innerHTML = `
-                <h3 class="song-title">${song.title}</h3>
-                <p class="song-artist">${song.artist}</p>
-                <p class="song-details">${song.genre} • ${song.year}</p>
-            `;
+            div.innerHTML = `<h3 class="song-title">${song.title}</h3><p class="song-artist">${song.artist}</p><p class="song-details">${song.genre} • ${song.year}</p>`;
             div.style.opacity = '0';
-
-            // Add click listener for selection (for copy)
             div.addEventListener('click', handleSongCardClick);
-            // Add keydown listener for accessibility (selection)
-            div.addEventListener('keydown', (e) => {
-                 if (e.key === 'Enter' || e.key === ' ') {
-                     e.preventDefault();
-                     handleSongCardClick({ target: div }); // Simulate click for selection
-                 }
-            });
-
+            div.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleSongCardClick({ target: div }); } });
             suggestionsContainer.appendChild(div);
             requestAnimationFrame(() => { div.style.opacity = '1'; });
         }
 
-        // Handle starting the drag operation
-        function handleDragStart(event) {
-            const card = event.target.closest('.song-card');
-            if (!card) return;
-
-            const title = card.dataset.title;
-            const artist = card.dataset.artist;
-            const dragText = `${title} ${artist}`; // Simple text format for Spotify search
-
-            // Set the data being dragged
-            try {
-                 event.dataTransfer.setData('text/plain', dragText);
-                 event.dataTransfer.effectAllowed = 'copy'; // Indicate it's a copy operation
-                 console.log(`Dragging: ${dragText}`);
-                 // Add a class for visual feedback during drag
-                 card.classList.add('dragging');
-                 // Remove the class when drag ends
-                 card.addEventListener('dragend', () => card.classList.remove('dragging'), { once: true });
-            } catch (err) {
-                 console.error("Drag start failed:", err);
-                 // Potentially provide feedback to the user if drag isn't supported
-            }
+        function handleDragStart(event) { /* ... same as previous version ... */
+            const card = event.target.closest('.song-card'); if (!card) return; const title = card.dataset.title; const artist = card.dataset.artist; const dragText = `${title} ${artist}`; try { event.dataTransfer.setData('text/plain', dragText); event.dataTransfer.effectAllowed = 'copy'; console.log(`Dragging: ${dragText}`); card.classList.add('dragging'); card.addEventListener('dragend', () => card.classList.remove('dragging'), { once: true }); } catch (err) { console.error("Drag start failed:", err); }
         }
 
-
-        // Handle clicking for selection (for copy-to-clipboard)
-        function handleSongCardClick(event) {
-            const card = event.target.closest('.song-card');
-            if (!card) return;
-
-            // Prevent click interfering with drag start on some systems
-            if (card.classList.contains('dragging')) return;
-
-            const songInfo = { title: card.dataset.title, artist: card.dataset.artist };
-            const isSelected = card.classList.toggle('selected');
-
-            if (isSelected) {
-                selectedSongData.push(songInfo);
-            } else {
-                selectedSongData = selectedSongData.filter(s => !(s.title === songInfo.title && s.artist === songInfo.artist));
-            }
-            // Enable/disable the copy button based on selection
-            copySelectedButton.disabled = selectedSongData.length === 0;
-            console.log("Selected songs:", selectedSongData);
+        function handleSongCardClick(event) { /* ... same as previous version, enables copy button ... */
+            const card = event.target.closest('.song-card'); if (!card) return; if (card.classList.contains('dragging')) return; const songInfo = { title: card.dataset.title, artist: card.dataset.artist }; const isSelected = card.classList.toggle('selected'); if (isSelected) { selectedSongData.push(songInfo); } else { selectedSongData = selectedSongData.filter(s => !(s.title === songInfo.title && s.artist === songInfo.artist)); } copySelectedButton.disabled = selectedSongData.length === 0; console.log("Selected songs (for copy):", selectedSongData);
         }
 
         function displayLoading() {
             suggestionsContainer.innerHTML = `<div class="loading">Finding the perfect songs for your mood</div>`;
             suggestionsContainer.setAttribute('aria-busy', 'true');
-            dragCopyControls.style.display = 'none'; // Hide controls while loading
+            controlsArea.style.display = 'none'; // Hide controls while loading
         }
         function displayError(message) {
              const safeMessage = message.replace(/</g, "&lt;").replace(/>/g, "&gt;");
              suggestionsContainer.innerHTML = `<div class="error-message">${safeMessage}</div>`;
              suggestionsContainer.removeAttribute('aria-busy');
-             dragCopyControls.style.display = 'none'; // Hide controls on error
+             controlsArea.style.display = 'none'; // Hide controls on error
         }
 
         function clearSuggestions() {
             suggestionsContainer.innerHTML = '';
             suggestionsContainer.removeAttribute('aria-busy');
-            selectedSongData = []; // Clear selection
-            if(copySelectedButton) copySelectedButton.disabled = true; // Disable button
-            dragCopyControls.style.display = 'none'; // Hide controls when clearing
-            copyStatus.textContent = ''; // Clear status
+            selectedSongData = []; // Clear selection for copy
+            currentSuggestions = []; // Clear suggestions for playlist creation
+            if(copySelectedButton) copySelectedButton.disabled = true;
+            if(createPlaylistButton) createPlaylistButton.disabled = true; // Also disable playlist button
+            controlsArea.style.display = 'none'; // Hide controls when clearing
+            copyStatus.textContent = '';
+            spotifyStatus.textContent = '';
         }
 
         // --- Copy to Clipboard Function ---
-        async function handleCopySelected() {
-            if (selectedSongData.length === 0) {
-                copyStatus.textContent = "No songs selected.";
+        async function handleCopySelected() { /* ... same as previous version ... */
+            if (selectedSongData.length === 0) { copyStatus.textContent = "No songs selected."; return; } const textToCopy = selectedSongData.map(song => `${song.title} - ${song.artist}`).join('\n'); try { await navigator.clipboard.writeText(textToCopy); copyStatus.textContent = `Copied ${selectedSongData.length} songs! Paste into Spotify search.`; console.log("Copied text:\n", textToCopy); } catch (err) { console.error('Failed to copy text: ', err); copyStatus.textContent = 'Error: Could not copy to clipboard.'; try { const textArea = document.createElement("textarea"); textArea.value = textToCopy; textArea.style.position = "fixed"; textArea.style.left = "-9999px"; document.body.appendChild(textArea); textArea.focus(); textArea.select(); document.execCommand('copy'); document.body.removeChild(textArea); copyStatus.textContent = `Copied ${selectedSongData.length} songs (fallback)! Paste into Spotify search.`; } catch (execErr) { console.error('Fallback copy failed:', execErr); copyStatus.textContent = 'Error: Copying failed. Please copy manually.'; } }
+        }
+
+        // --- Create Playlist Function (Frontend) ---
+        async function handleCreatePlaylist() {
+            const email = emailInput.value.trim();
+            // Basic validation (redundant with button disabling but good practice)
+            if (!email || !email.includes('@') || !email.includes('.')) {
+                spotifyStatus.textContent = 'Please enter a valid email address.';
                 return;
             }
+            if (!currentSuggestions || currentSuggestions.length === 0 || (currentSuggestions.length === 1 && currentSuggestions[0].title === 'Emergency Song')) {
+                 spotifyStatus.textContent = 'No valid song suggestions available to create a playlist.';
+                 return;
+            }
 
-            // Format the text: "Title - Artist" on each line
-            const textToCopy = selectedSongData
-                .map(song => `${song.title} - ${song.artist}`)
-                .join('\n');
+            createPlaylistButton.disabled = true;
+            spotifyStatus.textContent = 'Connecting to server...';
 
             try {
-                await navigator.clipboard.writeText(textToCopy);
-                copyStatus.textContent = `Copied ${selectedSongData.length} songs! Paste into Spotify search.`;
-                console.log("Copied text:\n", textToCopy);
-
-            } catch (err) {
-                console.error('Failed to copy text: ', err);
-                copyStatus.textContent = 'Error: Could not copy to clipboard.';
-                // Fallback for older browsers or if permissions fail
-                try {
-                    const textArea = document.createElement("textarea");
-                    textArea.value = textToCopy;
-                    textArea.style.position = "fixed"; // Prevent scrolling to bottom
-                    textArea.style.left = "-9999px";
-                    document.body.appendChild(textArea);
-                    textArea.focus();
-                    textArea.select();
-                    document.execCommand('copy');
-                    document.body.removeChild(textArea);
-                    copyStatus.textContent = `Copied ${selectedSongData.length} songs (fallback)! Paste into Spotify search.`;
-                } catch (execErr) {
-                     console.error('Fallback copy failed:', execErr);
-                     copyStatus.textContent = 'Error: Copying failed. Please copy manually.';
+                // Filter out the emergency song if it's the only one
+                const songsToSend = currentSuggestions.filter(s => s.title !== 'Emergency Song');
+                if (songsToSend.length === 0) {
+                     throw new Error('No valid songs to add.');
                 }
+
+                spotifyStatus.textContent = 'Creating playlist and sending email... (This may take a moment)';
+
+                const response = await fetch(`${BACKEND_URL}/create-playlist`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    // Send only title and artist, as that's what the backend needs for search
+                    body: JSON.stringify({
+                        email,
+                        songs: songsToSend.map(s => ({ title: s.title, artist: s.artist }))
+                    })
+                });
+
+                const result = await response.json(); // Try to parse JSON regardless of status
+
+                if (!response.ok) {
+                    // Use error message from backend if available, otherwise generic
+                    throw new Error(result.error || `Server responded with status ${response.status}`);
+                }
+
+                if (result.success) {
+                    // Include the link directly in the status message
+                    spotifyStatus.innerHTML = `Playlist created! Check your email (${email}). Link: <a href="${result.playlistLink}" target="_blank">${result.playlistLink}</a>`;
+                    console.log("Backend response:", result);
+                } else {
+                    // Should be caught by !response.ok, but handle just in case
+                    throw new Error(result.error || 'Backend reported failure.');
+                }
+            } catch (error) {
+                console.error('Error creating playlist:', error);
+                spotifyStatus.textContent = `Error: ${error.message}`;
+            } finally {
+                // Re-enable button after operation attempt
+                // Check email validity again in case it was changed while processing
+                 const isValidEmail = emailInput.value.trim().includes('@') && emailInput.value.trim().includes('.');
+                 createPlaylistButton.disabled = !isValidEmail || !currentSuggestions || currentSuggestions.length === 0;
             }
         }
 
@@ -567,76 +328,75 @@
             if (input.length === 0) { clearSuggestions(); return; }
 
             feelInput.disabled = true;
-            displayLoading(); // Also hides drag/copy controls
+            displayLoading(); // Hides controls area
 
             try {
+                // Reset state before fetching new suggestions
+                currentSuggestions = [];
+                selectedSongData = [];
+
                 currentSuggestions = await getSongSuggestions(input);
-                suggestionsContainer.innerHTML = ''; // Clear loading explicitly
+                suggestionsContainer.innerHTML = ''; // Clear loading
                 suggestionsContainer.removeAttribute('aria-busy');
 
-                if (currentSuggestions && currentSuggestions.length > 0) {
-                    if (currentSuggestions.length === 1 && currentSuggestions[0].title === 'Emergency Song') {
-                         displayError('Could not fetch suggestions. Displaying fallback.');
-                         // dragCopyControls remains hidden
-                    } else {
-                         currentSuggestions.forEach(displaySuggestion);
-                         // Show drag/copy controls now that suggestions are displayed
-                         dragCopyControls.style.display = 'block';
-                         copyStatus.textContent = ''; // Clear any previous status
-                         copySelectedButton.disabled = true; // Start disabled until songs are selected
-                    }
+                const validSuggestions = currentSuggestions && currentSuggestions.length > 0 && !(currentSuggestions.length === 1 && currentSuggestions[0].title === 'Emergency Song');
+
+                if (validSuggestions) {
+                    currentSuggestions.forEach(displaySuggestion);
+                    controlsArea.style.display = 'block'; // Show controls
+                    copyStatus.textContent = '';
+                    spotifyStatus.textContent = '';
+                    copySelectedButton.disabled = true; // Reset buttons
+                    // Enable create playlist button only if email is already valid
+                    const isValidEmail = emailInput.value.trim().includes('@') && emailInput.value.trim().includes('.');
+                    createPlaylistButton.disabled = !isValidEmail;
+                } else if (currentSuggestions && currentSuggestions.length === 1 && currentSuggestions[0].title === 'Emergency Song') {
+                    displayError('Could not fetch suggestions. Displaying fallback.');
+                    // controlsArea remains hidden
                 } else {
                     displayError('No songs found for this mood. Try expressing your feeling differently.');
-                    // dragCopyControls remains hidden
+                    // controlsArea remains hidden
                 }
             } catch (error) {
                  suggestionsContainer.innerHTML = ''; // Clear loading on error
                  suggestionsContainer.removeAttribute('aria-busy');
-                 dragCopyControls.style.display = 'none'; // Hide controls on error
+                 controlsArea.style.display = 'none'; // Hide controls on error
                  console.error('Error in handleInput:', error);
                  let userErrorMessage = error.message || 'An unexpected error occurred.';
                  // ... (user-friendly error message logic) ...
-                 if (userErrorMessage.includes('Failed to fetch') || userErrorMessage.includes('Network error')) { userErrorMessage = 'Unable to connect. Please check your internet connection and try again.'; }
-                 else if (userErrorMessage.includes('Rate limit exceeded')) { userErrorMessage = 'Feeling too popular! Too many requests right now. Please wait a moment and try again.'; }
-                 else if (userErrorMessage.includes('API Key Invalid') || userErrorMessage.includes('Authentication failed') || userErrorMessage.includes('AIMLAPI Key is not configured')) { userErrorMessage = 'There seems to be an issue connecting the suggestion service (Auth/Config). Please try again later.'; }
-                 else if (userErrorMessage.includes('All attempts to fetch suggestions failed')) { userErrorMessage = 'Could not find suggestions using any method. Please try again later.'; }
-                 else if (userErrorMessage.includes('Failed to parse song data') || userErrorMessage.includes('Invalid response structure') || userErrorMessage.includes('AI did not return a valid JSON array')) { userErrorMessage = 'Received an unexpected response from the suggestion service. Please try again.'; }
-                 else if (userErrorMessage.includes('Failed to retrieve or use cached results')) { userErrorMessage = 'There was an issue retrieving cached suggestions. Trying to fetch fresh ones.'; }
+                 if (userErrorMessage.includes('Failed to fetch') || userErrorMessage.includes('Network error')) { userErrorMessage = 'Unable to connect. Please check your internet connection and try again.'; } else if (userErrorMessage.includes('Rate limit exceeded')) { userErrorMessage = 'Feeling too popular! Too many requests right now. Please wait a moment and try again.'; } else if (userErrorMessage.includes('API Key Invalid') || userErrorMessage.includes('Authentication failed') || userErrorMessage.includes('AIMLAPI Key is not configured')) { userErrorMessage = 'There seems to be an issue connecting the suggestion service (Auth/Config). Please try again later.'; } else if (userErrorMessage.includes('All attempts to fetch suggestions failed')) { userErrorMessage = 'Could not find suggestions using any method. Please try again later.'; } else if (userErrorMessage.includes('Failed to parse song data') || userErrorMessage.includes('Invalid response structure') || userErrorMessage.includes('AI did not return a valid JSON array')) { userErrorMessage = 'Received an unexpected response from the suggestion service. Please try again.'; } else if (userErrorMessage.includes('Failed to retrieve or use cached results')) { userErrorMessage = 'There was an issue retrieving cached suggestions. Trying to fetch fresh ones.'; }
                  displayError(userErrorMessage);
             } finally {
                 feelInput.disabled = false;
                 if (!suggestionsContainer.querySelector('.error-message')) { feelInput.focus(); }
-                // Ensure selection is cleared if suggestions failed or were empty
+                // Ensure buttons are disabled if loading failed or no valid suggestions
                 if (!currentSuggestions || currentSuggestions.length === 0 || (currentSuggestions.length === 1 && currentSuggestions[0].title === 'Emergency Song')) {
-                    selectedSongData = [];
                     if(copySelectedButton) copySelectedButton.disabled = true;
+                    if(createPlaylistButton) createPlaylistButton.disabled = true;
                 }
             }
         }
 
         // --- Event Listeners ---
-
-        // Title Glow Effect
-        titleContainer.addEventListener('mousemove', (e) => {
-             const rect = titleContainer.getBoundingClientRect();
-             const x = e.clientX - rect.left; const y = e.clientY - rect.top;
-             maskCircle.setAttribute('cx', x); maskCircle.setAttribute('cy', y);
-        });
-        titleContainer.addEventListener('mouseleave', () => {
-             maskCircle.setAttribute('cx', -100); maskCircle.setAttribute('cy', -100);
-        });
-
-        // Input Handling (Enter Key)
+        titleContainer.addEventListener('mousemove', (e) => { const rect = titleContainer.getBoundingClientRect(); const x = e.clientX - rect.left; const y = e.clientY - rect.top; maskCircle.setAttribute('cx', x); maskCircle.setAttribute('cy', y); });
+        titleContainer.addEventListener('mouseleave', () => { maskCircle.setAttribute('cx', -100); maskCircle.setAttribute('cy', -100); });
         feelInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') { e.preventDefault(); handleInput(); } });
-
-        // Copy Selected Button
         copySelectedButton.addEventListener('click', handleCopySelected);
+        // Listener for the new Create Playlist button
+        createPlaylistButton.addEventListener('click', handleCreatePlaylist);
+        // Listener for email input to enable/disable the create playlist button
+        emailInput.addEventListener('input', () => {
+            const email = emailInput.value.trim();
+            const isValidEmail = email.includes('@') && email.includes('.');
+            // Also check if there are valid suggestions available
+            const hasValidSuggestions = currentSuggestions && currentSuggestions.length > 0 && !(currentSuggestions.length === 1 && currentSuggestions[0].title === 'Emergency Song');
+            createPlaylistButton.disabled = !isValidEmail || !hasValidSuggestions;
+        });
 
 
         // --- Initialization ---
         window.onload = () => {
-            // No external service auth needed on load
-            dragCopyControls.style.display = 'none'; // Ensure controls are hidden initially
+            controlsArea.style.display = 'none'; // Ensure controls are hidden initially
             feelInput.focus();
         };
 
