@@ -15,8 +15,8 @@
             align-items: center;
             background-color: #000000;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            /* *** USING BLUE THEME *** */
-            color: #39A7FF;
+            /* *** CHANGED: Main color to pink *** */
+            color: #F472B6; /* Was #39A7FF */
             overflow-x: hidden; /* Prevent horizontal scroll */
         }
 
@@ -31,8 +31,8 @@
 
         .title-path {
             fill: none;
-            /* *** USING BLUE THEME *** */
-            stroke: rgba(57, 167, 255, 0.15);
+            /* *** CHANGED: Subtle stroke to pink *** */
+            stroke: rgba(244, 114, 182, 0.15); /* Was rgba(57, 167, 255, 0.15) */
             stroke-width: 2;
             font-family: system-ui, -apple-system; /* Modern font */
             font-weight: 200; /* Lighter weight */
@@ -40,8 +40,8 @@
 
         .glow-path {
             fill: none;
-            /* *** USING BLUE THEME *** */
-            stroke: #39A7FF;
+            /* *** CHANGED: Glow path to pink *** */
+            stroke: #F472B6; /* Was #39A7FF */
             stroke-width: 2;
             filter: url(#glow);
         }
@@ -60,26 +60,26 @@
             padding: 15px;
             font-size: 18px;
             background: transparent; /* Blend with background */
-            /* *** USING BLUE THEME *** */
-            border: 2px solid #39A7FF;
+            /* *** CHANGED: Input border to pink *** */
+            border: 2px solid #F472B6; /* Was #39A7FF */
             border-radius: 8px;
-            /* *** USING BLUE THEME *** */
-            color: #39A7FF;
+            /* *** CHANGED: Input text color to pink *** */
+            color: #F472B6; /* Was #39A7FF */
             transition: all 0.3s ease;
             outline: none; /* Remove default outline */
             box-sizing: border-box; /* Include padding/border in width */
         }
 
         input[type="text"]:focus {
-            /* *** USING BLUE THEME *** */
-            box-shadow: 0 0 15px rgba(57, 167, 255, 0.5);
-            /* *** USING BLUE THEME *** */
-            border-color: #39A7FF;
+            /* *** CHANGED: Input focus glow to pink *** */
+            box-shadow: 0 0 15px rgba(244, 114, 182, 0.5); /* Was rgba(57, 167, 255, 0.5) */
+            /* *** CHANGED: Input focus border to pink *** */
+            border-color: #F472B6; /* Was #39A7FF */
         }
 
         input[type="text"]::placeholder {
-            /* *** USING BLUE THEME *** */
-            color: rgba(57, 167, 255, 0.5);
+            /* *** CHANGED: Input placeholder to pink *** */
+            color: rgba(244, 114, 182, 0.5); /* Was rgba(57, 167, 255, 0.5) */
         }
 
         /* --- Suggestions --- */
@@ -97,10 +97,10 @@
 
         /* --- Song Card --- */
         .song-card {
-            /* *** USING BLUE THEME *** */
-            background: rgba(57, 167, 255, 0.05);
-            /* *** USING BLUE THEME *** */
-            border: 1px solid rgba(57, 167, 255, 0.2);
+            /* *** CHANGED: Song card background to pink tint *** */
+            background: rgba(244, 114, 182, 0.05); /* Was rgba(57, 167, 255, 0.05) */
+            /* *** CHANGED: Song card border to pink tint *** */
+            border: 1px solid rgba(244, 114, 182, 0.2); /* Was rgba(57, 167, 255, 0.2) */
             border-radius: 12px; /* Softer corners */
             padding: 20px;
             /* Added transitions for selection */
@@ -118,23 +118,23 @@
 
         .song-card:hover, .song-card:focus { /* Add focus style for accessibility */
             transform: translateY(-2px); /* Slight lift effect */
-            /* *** USING BLUE THEME *** */
-            background: rgba(57, 167, 255, 0.1);
-            /* *** USING BLUE THEME *** */
-            border-color: rgba(57, 167, 255, 0.4);
-            /* *** USING BLUE THEME *** */
-            box-shadow: 0 4px 12px rgba(57, 167, 255, 0.1);
+            /* *** CHANGED: Song card hover background to pink tint *** */
+            background: rgba(244, 114, 182, 0.1); /* Was rgba(57, 167, 255, 0.1) */
+            /* *** CHANGED: Song card hover border to pink tint *** */
+            border-color: rgba(244, 114, 182, 0.4); /* Was rgba(57, 167, 255, 0.4) */
+            /* *** CHANGED: Song card hover shadow to pink tint *** */
+            box-shadow: 0 4px 12px rgba(244, 114, 182, 0.1); /* Was rgba(57, 167, 255, 0.1) */
             outline: none; /* Remove default focus outline if custom style is applied */
         }
 
         /* Style for selected song cards */
         .song-card.selected {
-            /* *** USING BLUE THEME *** */
-            border-color: #39A7FF;
-            /* *** USING BLUE THEME *** */
-            background-color: rgba(57, 167, 255, 0.15);
-            /* *** USING BLUE THEME *** */
-            box-shadow: 0 0 10px rgba(57, 167, 255, 0.5);
+            /* *** CHANGED: Selected border to pink *** */
+            border-color: #F472B6; /* Was #39A7FF */
+            /* *** CHANGED: Selected background to pink tint *** */
+            background-color: rgba(244, 114, 182, 0.15); /* Was rgba(57, 167, 255, 0.15) */
+            /* *** CHANGED: Selected shadow to pink tint *** */
+            box-shadow: 0 0 10px rgba(244, 114, 182, 0.5); /* Was rgba(57, 167, 255, 0.5) */
             cursor: pointer; /* Change cursor back for selected items (clickable) */
         }
         .song-card.selected::after { /* Optional: Add a checkmark or indicator */
@@ -142,8 +142,8 @@
             position: absolute;
             top: 10px;
             right: 10px;
-            /* *** USING BLUE THEME *** */
-            color: #39A7FF;
+            /* *** CHANGED: Checkmark to pink *** */
+            color: #F472B6; /* Was #39A7FF */
             font-size: 20px;
             font-weight: bold;
         }
@@ -151,8 +151,8 @@
 
         .song-title { /* Combined styles for title */
             font-size: 18px;
-            /* *** USING BLUE THEME *** */
-            color: rgba(57, 167, 255, 1);
+            /* *** CHANGED: Song title to pink *** */
+            color: rgba(244, 114, 182, 1); /* Was rgba(57, 167, 255, 1) */
             margin: 0 0 8px 0; /* Spacing below title */
             font-weight: 600; /* Bolder title */
             pointer-events: none; /* Prevent title from interfering with drag */
@@ -160,16 +160,16 @@
 
         .song-artist { /* Renamed from .artist for consistency */
             font-size: 16px;
-            /* *** USING BLUE THEME *** */
-            color: rgba(57, 167, 255, 0.8);
+            /* *** CHANGED: Song artist to pink tint *** */
+            color: rgba(244, 114, 182, 0.8); /* Was rgba(57, 167, 255, 0.8) */
             margin: 0 0 12px 0; /* Spacing below artist */
             pointer-events: none; /* Prevent artist from interfering with drag */
         }
 
         .song-details {
             font-size: 14px;
-            /* *** USING BLUE THEME *** */
-            color: rgba(57, 167, 255, 0.6);
+            /* *** CHANGED: Song details to pink tint *** */
+            color: rgba(244, 114, 182, 0.6); /* Was rgba(57, 167, 255, 0.6) */
             margin: 0;
             line-height: 1.4; /* Improve readability */
             pointer-events: none; /* Prevent details from interfering with drag */
@@ -192,8 +192,8 @@
         .loading {
             text-align: center;
             padding: 20px;
-            /* *** USING BLUE THEME *** */
-            color: rgba(57, 167, 255, 0.9);
+            /* *** CHANGED: Loading text to pink tint *** */
+            color: rgba(244, 114, 182, 0.9); /* Was rgba(57, 167, 255, 0.9) */
             font-size: 18px;
             display: flex;
             align-items: center;
@@ -207,10 +207,10 @@
             content: '';
             width: 20px;
             height: 20px;
-            /* *** USING BLUE THEME *** */
-            border: 2px solid rgba(57, 167, 255, 0.3);
-            /* *** USING BLUE THEME *** */
-            border-top: 2px solid #39A7FF;
+            /* *** CHANGED: Loading spinner border to pink tint *** */
+            border: 2px solid rgba(244, 114, 182, 0.3); /* Was rgba(57, 167, 255, 0.3) */
+            /* *** CHANGED: Loading spinner top border to pink *** */
+            border-top: 2px solid #F472B6; /* Was #39A7FF */
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
@@ -229,7 +229,8 @@
         #drag-copy-controls {
             margin-top: 30px;
             padding: 20px;
-            background-color: rgba(57, 167, 255, 0.05); /* Blue tint */
+            /* *** CHANGED: Controls background to pink tint *** */
+            background-color: rgba(244, 114, 182, 0.05); /* Was rgba(57, 167, 255, 0.05) */
             border-radius: 8px;
             width: 100%;
             max-width: 600px; /* Wider for instructions */
@@ -239,7 +240,8 @@
         #drag-copy-instructions {
              font-size: 14px;
              margin-bottom: 15px;
-             color: rgba(57, 167, 255, 0.8); /* Blue tint */
+             /* *** CHANGED: Instructions text to pink tint *** */
+             color: rgba(244, 114, 182, 0.8); /* Was rgba(57, 167, 255, 0.8) */
              line-height: 1.5;
         }
         #drag-copy-controls button {
@@ -249,14 +251,14 @@
             border: none;
             font-size: 16px;
             cursor: pointer;
-            /* *** USING BLUE THEME *** */
-            background-color: #39A7FF;
-            color: #000; /* Black text on blue button */
+            /* *** CHANGED: Button background to pink *** */
+            background-color: #F472B6; /* Was #39A7FF */
+            color: #000; /* Black text on pink button */
             transition: background-color 0.2s ease;
         }
         #drag-copy-controls button:hover:not(:disabled) {
-            /* *** USING BLUE THEME *** */
-            background-color: #67BFFF; /* Lighter blue on hover */
+            /* *** CHANGED: Button hover to lighter pink *** */
+            background-color: #F8A1C8; /* Was #67BFFF */
         }
          #drag-copy-controls button:disabled {
             background-color: #555;
@@ -267,8 +269,8 @@
             margin-top: 15px;
             font-size: 14px;
             min-height: 20px; /* Prevent layout shifts */
-            /* *** USING BLUE THEME *** */
-            color: rgba(57, 167, 255, 0.9);
+            /* *** CHANGED: Status text to pink tint *** */
+            color: rgba(244, 114, 182, 0.9); /* Was rgba(57, 167, 255, 0.9) */
         }
 
 
@@ -278,8 +280,8 @@
             bottom: 10px;
             right: 10px;
             font-size: 12px;
-            /* *** USING BLUE THEME *** */
-            color: rgba(57, 167, 255, 0.5);
+            /* *** CHANGED: Version counter to pink tint *** */
+            color: rgba(244, 114, 182, 0.5); /* Was rgba(57, 167, 255, 0.5) */
             font-family: monospace; /* Monospace for version */
             z-index: 998; /* Keep above most elements */
         }
@@ -331,8 +333,10 @@
     <!-- Drag/Copy Controls Area (Initially Hidden) -->
     <div id="drag-copy-controls">
         <div id="drag-copy-instructions">
-            Drag individual songs onto the Spotify app's **Search Bar**.<br>
-            Alternatively, click to select multiple songs, then use the button below.
+            <!-- *** UPDATED INSTRUCTIONS *** -->
+            **Manual Spotify Add:** Drag a song card onto the Spotify app's **Search Bar** to search for it.<br>
+            Or, click cards to select, then copy the list and paste into Spotify's Search Bar.<br>
+            *(Direct drag-to-playlist from browser is not possible)*
         </div>
         <button id="copy-selected-button" disabled>Copy Selected to Clipboard</button>
         <div id="copy-status"></div>
@@ -340,7 +344,7 @@
 
 
     <!-- Version Counter -->
-    <div class="version-counter">v4.3-DragCopyBlue</div> <!-- Updated version -->
+    <div class="version-counter">v4.4-DragCopyPink</div> <!-- Updated version -->
 
     <script>
         // --- Configuration (AI) ---
@@ -460,14 +464,18 @@
             const dragText = `${title} ${artist}`; // Simple text format for Spotify search
 
             // Set the data being dragged
-            event.dataTransfer.setData('text/plain', dragText);
-            event.dataTransfer.effectAllowed = 'copy'; // Indicate it's a copy operation
-
-            console.log(`Dragging: ${dragText}`);
-            // Optional: Add a class for visual feedback during drag
-            card.classList.add('dragging');
-            // Remove the class when drag ends (using a timeout or dragend listener)
-            card.addEventListener('dragend', () => card.classList.remove('dragging'), { once: true });
+            try {
+                 event.dataTransfer.setData('text/plain', dragText);
+                 event.dataTransfer.effectAllowed = 'copy'; // Indicate it's a copy operation
+                 console.log(`Dragging: ${dragText}`);
+                 // Add a class for visual feedback during drag
+                 card.classList.add('dragging');
+                 // Remove the class when drag ends
+                 card.addEventListener('dragend', () => card.classList.remove('dragging'), { once: true });
+            } catch (err) {
+                 console.error("Drag start failed:", err);
+                 // Potentially provide feedback to the user if drag isn't supported
+            }
         }
 
 
@@ -527,17 +535,28 @@
 
             try {
                 await navigator.clipboard.writeText(textToCopy);
-                copyStatus.textContent = `Copied ${selectedSongData.length} songs to clipboard! Paste into Spotify search.`;
+                copyStatus.textContent = `Copied ${selectedSongData.length} songs! Paste into Spotify search.`;
                 console.log("Copied text:\n", textToCopy);
-
-                // Optional: Clear selection after copying
-                // document.querySelectorAll('.song-card.selected').forEach(card => card.classList.remove('selected'));
-                // selectedSongData = [];
-                // copySelectedButton.disabled = true;
 
             } catch (err) {
                 console.error('Failed to copy text: ', err);
                 copyStatus.textContent = 'Error: Could not copy to clipboard.';
+                // Fallback for older browsers or if permissions fail
+                try {
+                    const textArea = document.createElement("textarea");
+                    textArea.value = textToCopy;
+                    textArea.style.position = "fixed"; // Prevent scrolling to bottom
+                    textArea.style.left = "-9999px";
+                    document.body.appendChild(textArea);
+                    textArea.focus();
+                    textArea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textArea);
+                    copyStatus.textContent = `Copied ${selectedSongData.length} songs (fallback)! Paste into Spotify search.`;
+                } catch (execErr) {
+                     console.error('Fallback copy failed:', execErr);
+                     copyStatus.textContent = 'Error: Copying failed. Please copy manually.';
+                }
             }
         }
 
