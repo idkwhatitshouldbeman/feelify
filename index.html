@@ -315,7 +315,7 @@
     <!-- Add aria-live for screen reader announcements -->
     <div class="suggestions-container" id="suggestions" aria-live="polite"></div>
 
-    <div class="version-counter">v3.16-AIML</div> <!-- Updated version -->
+    <div class="version-counter">v3.17-AIML-NoLocal</div> <!-- Updated version -->
     <div id="diagnostics" class="diagnostics"></div>
     <div id="debug-panel-left" class="debug-panel debug-panel-left"></div>
     <div id="debug-panel-right" class="debug-panel debug-panel-right"></div>
@@ -326,24 +326,12 @@
         // Hardcoding API keys in client-side code is HIGHLY INSECURE and exposes your key.
         // Anyone viewing the page source can steal and use it, potentially incurring costs.
         // Use this ONLY for personal, local testing. Replace with a backend proxy for production.
-        const AIMLAPI_KEY = '92494b76982f48a49b18266ede6e4af0'; // <-- PASTE YOUR ACTUAL AIMLAPI KEY HERE
+        const AIMLAPI_KEY = '92494b76982f48a49b18266ede6e4af0'; // Your key is here
         const AIMLAPI_BASE_URL = 'https://api.aimlapi.com/v1';
         const AIMLAPI_MODEL = 'gpt-4o'; // Or another model supported by AIMLAPI
 
-        // Enhanced song database (for fallback)
-        const songDatabase = [
-            { title: "Happy", artist: "Pharrell Williams", genre: "Pop", year: "2013" },
-            { title: "Don't Stop Believin'", artist: "Journey", genre: "Rock", year: "1981" },
-            { title: "Dancing Queen", artist: "ABBA", genre: "Disco", year: "1976" },
-            { title: "Walking on Sunshine", artist: "Katrina & The Waves", genre: "Pop Rock", year: "1985" },
-            { title: "I Wanna Dance with Somebody", artist: "Whitney Houston", genre: "Pop", year: "1987" },
-            { title: "Sweet Dreams", artist: "Eurythmics", genre: "Synth-pop", year: "1983" },
-            { title: "I Will Survive", artist: "Gloria Gaynor", genre: "Disco", year: "1978" },
-            { title: "Eye of the Tiger", artist: "Survivor", genre: "Hard Rock", year: "1982" },
-            { title: "Stayin' Alive", artist: "Bee Gees", genre: "Disco", year: "1977" },
-            { title: "Good Vibrations", artist: "The Beach Boys", genre: "Psychedelic Pop", year: "1966" }
-            // Add more songs if desired
-        ];
+        // --- REMOVED songDatabase ---
+        // const songDatabase = [ ... ];
 
         // --- DOM Elements ---
         const titleContainer = document.querySelector('.title-container');
@@ -356,24 +344,24 @@
 
         // --- State Variables ---
         let currentSuggestions = [];
-        // isLoadingMore removed as infinite scroll simulation is removed
 
         // --- Error Handling & Retry Configuration ---
         const MAX_RETRIES = 3; // Max retries specifically for the API call function
         const RETRY_DELAY = 1000; // Initial delay, increases exponentially
 
         // --- Diagnostics & Debugging ---
+        // REMOVED 'Local Fallback' from attempts
         const attempts = [
-            { name: 'AIMLAPI', status: '', details: 'Not tried yet' }, // Updated name
+            { name: 'AIMLAPI', status: '', details: 'Not tried yet' },
             { name: 'Cached Results', status: '', details: 'Not tried yet' },
-            { name: 'Local Fallback', status: '', details: 'Not tried yet' },
+            // { name: 'Local Fallback', status: '', details: 'Not tried yet' }, // REMOVED
             { name: 'Emergency Mode', status: '', details: 'Not tried yet' }
         ];
 
         const debugIssues = {
             left: [
                 { id: 'network', name: 'Network Connectivity', status: 'unknown', details: 'Checking...' },
-                { id: 'api-url', name: 'API URL Accessible', status: 'unknown', details: 'Checking...' }, // Generic name
+                { id: 'api-url', name: 'API URL Accessible', status: 'unknown', details: 'Checking...' },
                 { id: 'cors', name: 'CORS Issues', status: 'unknown', details: 'Checking...' },
                 { id: 'api-key', name: 'API Key Valid', status: 'unknown', details: 'Checking...' },
                 { id: 'rate-limit', name: 'Rate Limit Exceeded', status: 'unknown', details: 'Checking...' },
@@ -391,9 +379,15 @@
 
         // --- Utility Functions ---
         function updateDiagnostics(attemptIndex, status, details = '') {
-            if (attemptIndex > 0 && attemptIndex <= attempts.length) {
-                attempts[attemptIndex - 1].status = status;
-                attempts[attemptIndex - 1].details = details;
+            // Adjust index mapping since 'Local Fallback' was removed
+            let displayIndex = -1;
+            if (attemptIndex === 1) displayIndex = 0; // AIMLAPI
+            else if (attemptIndex === 2) displayIndex = 1; // Cached Results
+            else if (attemptIndex === 3) displayIndex = 2; // Emergency Mode (was 4)
+
+            if (displayIndex !== -1 && displayIndex < attempts.length) {
+                attempts[displayIndex].status = status;
+                attempts[displayIndex].details = details;
 
                 diagnostics.innerHTML = attempts.map((a, i) => `
                     <div class="attempt-row">
@@ -401,8 +395,16 @@
                         ${a.name}: ${a.details}
                     </div>
                 `).join('');
+            } else if (attemptIndex === 0) { // Handle initial clear
+                 diagnostics.innerHTML = attempts.map((a, i) => `
+                    <div class="attempt-row">
+                        <span class="attempt-indicator ${a.status || 'attempt-pending'}"></span>
+                        ${a.name}: ${a.details || 'Not tried yet'}
+                    </div>
+                `).join('');
             }
         }
+
 
         async function delay(ms) {
             return new Promise(resolve => setTimeout(resolve, ms));
@@ -490,15 +492,18 @@
         // --- Core Logic ---
 
         async function getSongSuggestions(input) {
+            // REMOVED 'Local Fallback' from attemptFns
             const attemptFns = [
-                { name: 'AIMLAPI', fn: tryAIMLAPI }, // Updated
+                { name: 'AIMLAPI', fn: tryAIMLAPI },
                 { name: 'Cached Results', fn: tryCachedResults },
-                { name: 'Local Fallback', fn: tryLocalFallback },
+                // { name: 'Local Fallback', fn: tryLocalFallback }, // REMOVED
                 { name: 'Emergency Mode', fn: tryEmergencyMode }
             ];
 
             // Reset all attempt statuses before starting
-            attempts.forEach((a, i) => updateDiagnostics(i + 1, '', 'Not tried yet'));
+            // Use index 0 for initial clear, then 1-based index for attempts
+            updateDiagnostics(0, '', ''); // Clear/reset display
+
             // Reset relevant debug issues
             ['api-url', 'cors', 'api-key', 'rate-limit', 'response-format', 'json-parsing'].forEach(id => {
                 const panel = debugIssues.left.some(i => i.id === id) ? 'left' : 'right';
@@ -508,14 +513,14 @@
 
             for (let i = 0; i < attemptFns.length; i++) {
                 const attempt = attemptFns[i];
-                const attemptIndex = i + 1;
+                const attemptIndex = i + 1; // 1-based index for attempts
                 try {
                     updateDiagnostics(attemptIndex, 'attempt-active', `Trying now...`);
                     const result = await attempt.fn(input); // Pass input to the function
                     updateDiagnostics(attemptIndex, 'attempt-success', `Success`);
 
-                    // Cache successful results from API or fallback
-                    if (i < 2 && result && result.length > 0) { // Only cache API or local fallback results
+                    // Cache successful results from API (only first attempt now)
+                    if (i === 0 && result && result.length > 0) { // Only cache API results
                          try {
                             localStorage.setItem(`songs_${input}`, JSON.stringify(result));
                             updateDebugIssue('right', 'local-storage', 'ok', 'Cached results successfully');
@@ -523,22 +528,20 @@
                             updateDebugIssue('right', 'local-storage', 'warning', 'Failed to cache results: ' + e.message);
                          }
                     }
-                    return result;
+                    return result; // Return the successful result
                 } catch (error) {
                     console.error(`${attempt.name} failed:`, error);
                     updateDiagnostics(attemptIndex, 'attempt-failed', error.message || 'Unknown error');
-                    // Don't retry automatically here, let the loop handle fallback
-                    // Optional: Add a small delay between fallbacks if desired
-                    // if (i < attemptFns.length - 1) await delay(200);
+                    // Continue to the next fallback method in the loop
                 }
             }
-            // If all attempts failed
+            // If all attempts failed (loop finished without returning)
             updateDebugIssue('left', 'api-url', 'error', 'All methods failed');
             throw new Error('All attempts to fetch suggestions failed.');
         }
 
         async function tryAIMLAPI(input) {
-            // Check if API key is placeholder
+            // Check if API key is placeholder (redundant check, but safe)
             if (!AIMLAPI_KEY || AIMLAPI_KEY === '<YOUR_AIMLAPI_KEY>') {
                  updateDebugIssue('left', 'api-key', 'error', 'API Key is missing or placeholder');
                  throw new Error('AIMLAPI Key is not configured.');
@@ -561,7 +564,8 @@ Example format: [{"title": "Song Title", "artist": "Artist Name", "genre": "Pop"
             for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
                 try {
                     console.log(`AIMLAPI attempt ${attempt}/${MAX_RETRIES}`);
-                    updateDiagnostics(1, 'attempt-active', `Trying API (Attempt ${attempt}/${MAX_RETRIES})...`); // Update diagnostics for retries
+                    // Use attemptIndex 1 for diagnostics related to AIMLAPI
+                    updateDiagnostics(1, 'attempt-active', `Trying API (Attempt ${attempt}/${MAX_RETRIES})...`);
 
                     const response = await fetch(apiUrl, {
                         method: 'POST',
@@ -575,37 +579,34 @@ Example format: [{"title": "Song Title", "artist": "Artist Name", "genre": "Pop"
                                 { role: "system", content: systemPrompt },
                                 { role: "user", content: `Suggest 5 songs for someone feeling: ${input}` }
                             ],
-                            // Optional: Adjust temperature for creativity vs consistency
                             // temperature: 0.7,
-                            // Optional: Limit response length
                             // max_tokens: 500
                         })
                     });
 
                     updateDebugIssue('left', 'api-url', 'ok', `Connected (${response.status})`);
-                    updateDebugIssue('left', 'cors', 'ok', 'No CORS issues detected'); // Assume ok if fetch didn't throw CORS error
+                    updateDebugIssue('left', 'cors', 'ok', 'No CORS issues detected');
 
                     if (!response.ok) {
                         let errorData = { message: `API request failed with status ${response.status}` };
                         try {
-                            errorData = await response.json(); // Try to get more details
+                            errorData = await response.json();
                             updateDebugIssue('right', 'json-parsing', 'ok', 'Parsed error response JSON');
                         } catch (e) {
                              updateDebugIssue('right', 'json-parsing', 'error', 'Failed to parse error response JSON');
                              console.error("Failed to parse error response body:", response.statusText);
                         }
 
-                        // AIMLAPI might use 'detail' instead of 'error.message' sometimes
                         const errorMessage = errorData?.error?.message || errorData?.detail || errorData.message || `HTTP error ${response.status}`;
                         console.error(`AIMLAPI error (${response.status}):`, errorMessage, errorData);
 
                         if (response.status === 401 || response.status === 403) {
                             updateDebugIssue('left', 'api-key', 'error', `Authentication failed: ${errorMessage}`);
-                            throw new Error(`API Key Invalid or Permission Denied: ${errorMessage}`); // Fail fast on auth errors
+                            throw new Error(`API Key Invalid or Permission Denied: ${errorMessage}`);
                         } else if (response.status === 429) {
                             updateDebugIssue('left', 'rate-limit', 'error', `Rate limit exceeded: ${errorMessage}`);
                             if (attempt < MAX_RETRIES) {
-                                const waitTime = RETRY_DELAY * Math.pow(2, attempt -1); // Exponential backoff
+                                const waitTime = RETRY_DELAY * Math.pow(2, attempt -1);
                                 console.log(`Rate limited. Retrying in ${waitTime}ms...`);
                                 updateDiagnostics(1, 'attempt-active', `Rate limited. Retrying in ${waitTime/1000}s...`);
                                 await delay(waitTime);
@@ -632,8 +633,6 @@ Example format: [{"title": "Song Title", "artist": "Artist Name", "genre": "Pop"
                         throw new Error('Invalid JSON response from API');
                     }
 
-
-                    // Extract content and parse the inner JSON
                     const aiContent = responseData?.choices?.[0]?.message?.content;
                     if (!aiContent) {
                         updateDebugIssue('left', 'response-format', 'error', 'No content found in API response choices');
@@ -641,8 +640,6 @@ Example format: [{"title": "Song Title", "artist": "Artist Name", "genre": "Pop"
                     }
 
                     try {
-                        // Attempt to parse the content string as JSON
-                        // Trim potential markdown fences or extra whitespace
                         const cleanedContent = aiContent.trim().replace(/^```json\s*|```$/g, '');
                         const songs = JSON.parse(cleanedContent);
                          if (!Array.isArray(songs)) {
@@ -650,7 +647,7 @@ Example format: [{"title": "Song Title", "artist": "Artist Name", "genre": "Pop"
                             throw new Error('AI did not return a valid JSON array');
                          }
                         updateDebugIssue('left', 'response-format', 'ok', 'Valid JSON array received from AI');
-                        return validateSongData(songs); // Validate the structure
+                        return validateSongData(songs); // Validate and return
                     } catch (e) {
                         console.error("Failed to parse AI content as JSON:", aiContent, e);
                         updateDebugIssue('left', 'response-format', 'error', 'AI content is not valid JSON: ' + e.message);
@@ -660,8 +657,7 @@ Example format: [{"title": "Song Title", "artist": "Artist Name", "genre": "Pop"
                 } catch (error) {
                     console.error(`AIMLAPI attempt ${attempt} failed:`, error);
 
-                    // Update debug panels based on error type
-                    if (error.name === 'TypeError' && !navigator.onLine) { // Likely network error
+                    if (error.name === 'TypeError' && !navigator.onLine) {
                         updateDebugIssue('left', 'network', 'error', 'Network error during fetch: ' + error.message);
                         updateDebugIssue('left', 'api-url', 'error', 'Failed to connect (Network Issue)');
                     } else if (error.message.includes('API Key Invalid')) {
@@ -669,16 +665,14 @@ Example format: [{"title": "Song Title", "artist": "Artist Name", "genre": "Pop"
                     } else if (error.message.includes('Rate limit exceeded')) {
                          updateDebugIssue('left', 'rate-limit', 'error', error.message);
                     }
-                    // Add more specific error checks if needed
 
                     if (attempt === MAX_RETRIES) {
                         throw error; // Throw the final error after all retries
                     }
-                    // If it's not a rate limit error and not the last attempt, fail fast
                      if (!error.message.includes('Rate limit exceeded')) {
-                         throw error; // Fail fast on non-retriable errors
+                         throw error; // Fail fast on non-retriable errors for this attempt
                      }
-                     // If it was a rate limit error, the 'continue' statement handled the retry delay.
+                     // If rate limited, the 'continue' handles the retry delay.
                 }
             }
              // Should not be reached if MAX_RETRIES > 0, but acts as a safeguard
@@ -705,42 +699,16 @@ Example format: [{"title": "Song Title", "artist": "Artist Name", "genre": "Pop"
             }
         }
 
+        // --- REMOVED tryLocalFallback function ---
+        /*
         function tryLocalFallback(input) {
-             // Use the more detailed songDatabase with keyword matching
-            const lowerInput = input.toLowerCase();
-            let matchingSongs = [];
-
-            // Simple keyword matching (can be expanded)
-            if (lowerInput.includes('happy') || lowerInput.includes('joyful') || lowerInput.includes('upbeat')) {
-                matchingSongs = songDatabase.filter(s => ['Pop', 'Disco', 'Pop Rock'].includes(s.genre) || s.title === "Happy" || s.title === "Walking on Sunshine");
-            } else if (lowerInput.includes('sad') || lowerInput.includes('down') || lowerInput.includes('blue') || lowerInput.includes('melancholy')) {
-                matchingSongs = songDatabase.filter(s => s.genre === 'Synth-pop' || s.title === "I Will Survive"); // Example
-            } else if (lowerInput.includes('energetic') || lowerInput.includes('pumped') || lowerInput.includes('motivated') || lowerInput.includes('power')) {
-                matchingSongs = songDatabase.filter(s => ['Rock', 'Hard Rock', 'Pop Rock'].includes(s.genre) || s.title === "Eye of the Tiger");
-            } else if (lowerInput.includes('relaxed') || lowerInput.includes('chill') || lowerInput.includes('calm')) {
-                 matchingSongs = songDatabase.filter(s => s.genre === 'Psychedelic Pop' || s.genre === 'Synth-pop'); // Example
-            }
-
-            // If no specific keywords match, provide a general selection
-            if (matchingSongs.length === 0) {
-                 matchingSongs = songDatabase.slice(0, 5); // Return first 5 as a general fallback
-            } else {
-                 matchingSongs = matchingSongs.slice(0, 5); // Limit results
-            }
-
-
-            if (matchingSongs.length > 0) {
-                 updateDebugIssue('right', 'browser-compat', 'ok', 'Used local song database fallback'); // Reusing a debug slot
-                 return validateSongData(matchingSongs); // Ensure consistent format
-            }
-
-            updateDebugIssue('right', 'browser-compat', 'warning', 'No matching local songs found');
-            throw new Error('No matching local songs');
+             // ... removed ...
         }
-
+        */
 
         function tryEmergencyMode(input) {
-            updateDebugIssue('right', 'browser-compat', 'ok', 'Activated emergency mode'); // Reusing slot
+            // Update debug issue - maybe reuse 'browser-compat' or add a specific one
+            updateDebugIssue('right', 'browser-compat', 'ok', 'Activated emergency mode');
             // Return a single, clearly marked emergency song
             return validateSongData([{
                 title: 'Emergency Song',
@@ -768,8 +736,15 @@ Example format: [{"title": "Song Title", "artist": "Artist Name", "genre": "Pop"
                  console.warn("Some song entries were filtered during validation due to missing titles.");
                  updateDebugIssue('left', 'response-format', 'warning', 'Some song entries lacked titles');
              } else if (validated.length > 0) {
-                 updateDebugIssue('left', 'response-format', 'ok', 'Song data structure appears valid');
+                 // Only mark as OK if validation passed without warnings AND data exists
+                 if (validated.length === data.length) {
+                    updateDebugIssue('left', 'response-format', 'ok', 'Song data structure appears valid');
+                 }
+             } else if (data.length > 0 && validated.length === 0) {
+                 // If the original data had items but validation removed them all
+                 updateDebugIssue('left', 'response-format', 'error', 'All song entries failed validation (e.g., missing titles)');
              }
+
 
             return validated;
         }
@@ -785,9 +760,6 @@ Example format: [{"title": "Song Title", "artist": "Artist Name", "genre": "Pop"
                 <p class="song-artist">${song.artist}</p>
                 <p class="song-details">${song.genre} • ${song.year}</p>
             `;
-            // Add event listener for click/keyboard interaction if needed later
-            // div.addEventListener('click', () => { /* Action for song */ });
-            // div.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { /* Action for song */ } });
             suggestionsContainer.appendChild(div);
         }
 
@@ -795,20 +767,18 @@ Example format: [{"title": "Song Title", "artist": "Artist Name", "genre": "Pop"
             suggestionsContainer.innerHTML = `
                 <div class="loading">Finding the perfect songs for your mood</div>
             `;
-             // Set ARIA busy state
              suggestionsContainer.setAttribute('aria-busy', 'true');
         }
 
         function displayError(message) {
-             // Sanitize message slightly (basic)
              const safeMessage = message.replace(/</g, "&lt;").replace(/>/g, "&gt;");
              suggestionsContainer.innerHTML = `<div class="error-message">${safeMessage}</div>`;
-             suggestionsContainer.removeAttribute('aria-busy'); // Clear busy state
+             suggestionsContainer.removeAttribute('aria-busy');
         }
 
         function clearSuggestions() {
             suggestionsContainer.innerHTML = '';
-            suggestionsContainer.removeAttribute('aria-busy'); // Clear busy state
+            suggestionsContainer.removeAttribute('aria-busy');
         }
 
 
@@ -829,17 +799,16 @@ Example format: [{"title": "Song Title", "artist": "Artist Name", "genre": "Pop"
                 if (currentSuggestions && currentSuggestions.length > 0) {
                     currentSuggestions.forEach(displaySuggestion);
                 } else {
-                    // Handle case where validation might return empty or API returns empty valid array
                     displayError('No songs found for this mood. Try expressing your feeling differently.');
-                    // Update diagnostics if API succeeded but returned no songs (assuming API was the successful attempt)
-                    if (attempts[0].status === 'attempt-success') {
+                    // Update diagnostics if API succeeded but returned no songs
+                    if (attempts[0].status === 'attempt-success') { // Check if AIMLAPI was the one that succeeded
                         updateDiagnostics(1, 'attempt-failed', 'No songs returned');
                     }
                 }
             } catch (error) {
                 console.error('Error in handleInput:', error);
                 let userErrorMessage = error.message || 'An unexpected error occurred.';
-                // Make error messages slightly more user-friendly
+                // User-friendly error messages
                 if (userErrorMessage.includes('Failed to fetch') || userErrorMessage.includes('Network error')) {
                     userErrorMessage = 'Unable to connect. Please check your internet connection and try again.';
                      updateDebugIssue('left', 'network', 'error', 'Failed to fetch during input handling');
@@ -856,11 +825,10 @@ Example format: [{"title": "Song Title", "artist": "Artist Name", "genre": "Pop"
                 displayError(userErrorMessage);
             } finally {
                 feelInput.disabled = false;
-                // Don't refocus immediately if there was an error, user might want to read it
                 if (!suggestionsContainer.querySelector('.error-message')) {
                    feelInput.focus();
                 }
-                 suggestionsContainer.removeAttribute('aria-busy'); // Ensure busy state is cleared
+                 suggestionsContainer.removeAttribute('aria-busy');
             }
         }
 
@@ -882,17 +850,15 @@ Example format: [{"title": "Song Title", "artist": "Artist Name", "genre": "Pop"
         // Input Handling (Enter Key)
         feelInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
-                e.preventDefault(); // Prevent potential form submission
+                e.preventDefault();
                 handleInput();
             }
         });
 
-        // Infinite Scroll Simulation Removed
-
         // --- Initialization ---
         runInitialChecks(); // Run checks when script loads
         updateDebugPanel(); // Initial render of debug panels
-        updateDiagnostics(0, '', ''); // Initial render of diagnostics panel
+        updateDiagnostics(0, '', ''); // Initial render of diagnostics panel (now with fewer items)
 
     </script>
 </body>
