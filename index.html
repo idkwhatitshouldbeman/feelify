@@ -411,7 +411,6 @@
         async function getSongSuggestions(input) {
             const attemptFns = [
                 { name: 'Worker API', fn: tryWorkerAPI },
-                { name: 'Direct API', fn: tryDirectAPI },
                 { name: 'Cached Results', fn: tryCachedResults },
                 { name: 'Local Fallback', fn: tryLocalFallback },
                 { name: 'Emergency Mode', fn: tryEmergencyMode }
