@@ -1,5 +1,19 @@
 export default {
   async fetch(request, env) {
+    // Validate API key is present
+    if (!env.OPENROUTER_API_KEY) {
+      return new Response(JSON.stringify({
+        error: 'API key not configured',
+        detail: 'OpenRouter API key is missing from environment variables'
+      }), {
+        status: 500,
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*'
+        }
+      });
+    }
+
     if (request.method === 'OPTIONS') {
       return new Response(null, {
         headers: {
@@ -11,15 +25,20 @@ export default {
     }
 
     if (request.method === 'POST') {
-      const { mood } = await request.json();
-      
       try {
+        const { mood } = await request.json();
+        if (!mood) {
+          throw new Error('Mood parameter is required');
+        }
+
+        console.log(`Processing request for mood: ${mood}`);
+        
         const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${env.OPENROUTER_API_KEY}`,
             'Content-Type': 'application/json',
-            'HTTP-Referer': request.headers.get('Origin'),
+            'HTTP-Referer': request.headers.get('Origin') || 'https://feelify.aarohkandy.workers.dev',
             'X-Title': 'Feelify'
           },
           body: JSON.stringify({
@@ -34,14 +53,49 @@ export default {
           })
         });
 
-        const data = await response.json();
         if (!response.ok) {
-          throw new Error(data.error?.message || 'Failed to get suggestions');
+          const data = await response.json();
+          console.error('OpenRouter API error:', data);
+          throw new Error(data.error?.message || `API request failed with status ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log('OpenRouter API response:', data);
+
+        if (!data.choices?.[0]?.message?.content) {
+          throw new Error('Invalid API response format');
         }
 
         const content = data.choices[0].message.content;
-        const jsonMatch = content.match(/\[([\s\S]*?)\]/); 
-        const songs = jsonMatch ? JSON.parse(jsonMatch[0]) : [];
+        let songs = [];
+
+        try {
+          // First try to parse the entire content as JSON
+          songs = JSON.parse(content);
+        } catch {
+          // If that fails, try to extract JSON array using regex
+          const jsonMatch = content.match(/\[([\s\S]*?)\]/); 
+          if (!jsonMatch) {
+            console.error('Failed to extract JSON from content:', content);
+            throw new Error('Could not extract song data from API response');
+          }
+          songs = JSON.parse(jsonMatch[0]);
+        }
+
+        // Validate song data
+        if (!Array.isArray(songs) || songs.length === 0) {
+          throw new Error('No valid songs returned from API');
+        }
+
+        // Ensure each song has required properties
+        songs = songs.map(song => ({
+          title: song.title || 'Unknown Title',
+          artist: song.artist || 'Unknown Artist',
+          genre: song.genre || 'Unknown Genre',
+          year: song.year || 'Unknown Year'
+        }));
+
+        console.log(`Successfully generated ${songs.length} songs`);
         
         return new Response(JSON.stringify(songs), {
           headers: {
@@ -50,9 +104,11 @@ export default {
           }
         });
       } catch (error) {
-        console.error('Error:', error);
+        console.error('Worker error:', error);
         return new Response(JSON.stringify({ 
-          error: error.message || 'Failed to generate songs'
+          error: error.message || 'Failed to generate songs',
+          timestamp: new Date().toISOString(),
+          mood: mood
         }), {
           status: 500,
           headers: {
