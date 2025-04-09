@@ -334,7 +334,7 @@
         <input type="text" id="feelInput" placeholder="How are you feeling? (Press Enter)" autofocus>
     </div>
     <div class="suggestions-container" id="suggestions"></div>
-    <div class="version-counter">v3.6</div>
+    <div class="version-counter">v3.7</div>
     <div id="diagnostics" class="diagnostics"></div>
 
     <script>
@@ -386,7 +386,6 @@
 
         const attempts = [
             { name: 'Worker API', status: '', details: 'Not tried yet' },
-            { name: 'Direct API', status: '', details: 'Not tried yet' },
             { name: 'Cached Results', status: '', details: 'Not tried yet' },
             { name: 'Local Fallback', status: '', details: 'Not tried yet' },
             { name: 'Emergency Mode', status: '', details: 'Not tried yet' }
@@ -438,52 +437,55 @@
         }
 
         async function tryWorkerAPI(input) {
-            const response = await fetch(WORKER_URL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ mood: input })
-            });
+            for (let attempt = 1; attempt <= 3; attempt++) {
+                try {
+                    console.log(`Worker API attempt ${attempt}/3`);
+                    const response = await fetch(WORKER_URL, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            mood: input
+                        })
+                    });
 
-            if (!response.ok) {
-                const data = await response.json().catch(() => ({}));
-                throw new Error(data.error || `Worker API failed: ${response.status}`);
+                    if (!response.ok) {
+                        const data = await response.json().catch(() => ({}));
+                        console.error(`Worker API error:`, data);
+                        if (response.status === 429) {
+                            // Rate limit hit, wait and retry
+                            const waitTime = 1000 * Math.pow(2, attempt);
+                            console.log(`Rate limited, waiting ${waitTime}ms before retry`);
+                            await delay(waitTime);
+                            continue;
+                        }
+                        throw new Error(data.error || `Worker API failed: ${response.status}`);
+                    }
+
+                    const data = await response.json();
+                    if (!Array.isArray(data)) {
+                        throw new Error('Invalid response format');
+                    }
+                    return validateSongData(data);
+                } catch (error) {
+                    console.error(`Worker API attempt ${attempt} failed:`, error);
+                    if (attempt === 3 || error.message.includes('Invalid')) {
+                        throw error; // Let the final error or validation errors propagate
+                    }
+                    // For network errors, wait and retry
+                    if (error.name === 'TypeError') {
+                        const waitTime = 1000 * Math.pow(2, attempt);
+                        console.log(`Network error, waiting ${waitTime}ms before retry`);
+                        await delay(waitTime);
+                        continue;
+                    }
+                    throw error; // For other errors, fail fast
+                }
             }
-
-            const data = await response.json();
-            return validateSongData(data);
         }
 
-        async function tryDirectAPI(input) {
-            const response = await fetch(FALLBACK_URL, {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
-                    'Content-Type': 'application/json',
-                    'HTTP-Referer': window.location.origin,
-                    'X-Title': 'Feelify'
-                },
-                body: JSON.stringify({
-                    model: 'nvidia/llama-3.1-nemotron-nano-8b-v1:free',
-                    messages: [{
-                        role: 'system',
-                        content: 'You are a music expert. Return ONLY a JSON array of songs.'
-                    }, {
-                        role: 'user',
-                        content: `Generate 12 songs that match this mood: ${input}`
-                    }]
-                })
-            });
-
-            if (!response.ok) {
-                throw new Error('Direct API failed');
-            }
-
-            const data = await response.json();
-            const content = data.choices?.[0]?.message?.content;
-            return validateSongData(extractJSONFromText(content));
-        }
+        // Direct API removed for security (API key should not be in frontend)
 
         async function tryCachedResults(input) {
             const cached = localStorage.getItem(`songs_${input}`);
