@@ -268,6 +268,69 @@
             max-width: 300px;
             word-wrap: break-word;
         }
+        
+        .debug-panel {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 250px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 8px;
+            padding: 15px;
+            color: rgba(16, 185, 129, 0.9);
+            font-size: 12px;
+            z-index: 1000;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .debug-panel-left {
+            left: 10px;
+        }
+        
+        .debug-panel-right {
+            right: 10px;
+        }
+        
+        .debug-title {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #10B981;
+            border-bottom: 1px solid rgba(16, 185, 129, 0.3);
+            padding-bottom: 5px;
+        }
+        
+        .debug-item {
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .debug-status {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+        
+        .debug-status-ok {
+            background-color: #10B981;
+        }
+        
+        .debug-status-warning {
+            background-color: #F59E0B;
+        }
+        
+        .debug-status-error {
+            background-color: #EF4444;
+        }
+        
+        .debug-status-unknown {
+            background-color: #6B7280;
+        }
 
         .attempt-row {
             margin: 4px 0;
@@ -334,8 +397,10 @@
         <input type="text" id="feelInput" placeholder="How are you feeling? (Press Enter)" autofocus>
     </div>
     <div class="suggestions-container" id="suggestions"></div>
-    <div class="version-counter">v3.7</div>
+    <div class="version-counter">v3.14</div>
     <div id="diagnostics" class="diagnostics"></div>
+    <div id="debug-panel-left" class="debug-panel debug-panel-left"></div>
+    <div id="debug-panel-right" class="debug-panel debug-panel-right"></div>
 
     <script>
         // Worker Configuration
@@ -408,6 +473,172 @@
             return new Promise(resolve => setTimeout(resolve, ms));
         }
 
+        // Debug panel configuration
+        const debugIssues = {
+            left: [
+                { id: 'network', name: 'Network Connectivity', status: 'unknown', details: 'Checking...' },
+                { id: 'worker-url', name: 'Worker URL Accessible', status: 'unknown', details: 'Checking...' },
+                { id: 'cors', name: 'CORS Issues', status: 'unknown', details: 'Checking...' },
+                { id: 'api-key', name: 'API Key Valid', status: 'unknown', details: 'Checking...' },
+                { id: 'rate-limit', name: 'Rate Limit Exceeded', status: 'unknown', details: 'Checking...' },
+                { id: 'response-format', name: 'Response Format Valid', status: 'unknown', details: 'Checking...' }
+            ],
+            right: [
+                { id: 'local-storage', name: 'Local Storage Available', status: 'unknown', details: 'Checking...' },
+                { id: 'json-parsing', name: 'JSON Parsing', status: 'unknown', details: 'Checking...' },
+                { id: 'browser-compat', name: 'Browser Compatibility', status: 'unknown', details: 'Checking...' },
+                { id: 'fetch-api', name: 'Fetch API Available', status: 'unknown', details: 'Checking...' },
+                { id: 'promise-support', name: 'Promise Support', status: 'unknown', details: 'Checking...' },
+                { id: 'console-logs', name: 'Console Errors', status: 'unknown', details: 'Checking...' }
+            ]
+        };
+
+        function updateDebugPanel() {
+            const leftPanel = document.getElementById('debug-panel-left');
+            const rightPanel = document.getElementById('debug-panel-right');
+            
+            leftPanel.innerHTML = `
+                <div class="debug-title">Potential Server Issues</div>
+                ${debugIssues.left.map(issue => `
+                    <div class="debug-item">
+                        <span>
+                            <span class="debug-status debug-status-${issue.status}"></span>
+                            ${issue.name}
+                        </span>
+                        <span>${issue.status === 'error' ? '✗' : issue.status === 'ok' ? '✓' : '?'}</span>
+                    </div>
+                    <div style="font-size: 10px; margin-left: 15px; margin-bottom: 8px; color: rgba(16, 185, 129, 0.6);">
+                        ${issue.details}
+                    </div>
+                `).join('')}
+            `;
+            
+            rightPanel.innerHTML = `
+                <div class="debug-title">Potential Client Issues</div>
+                ${debugIssues.right.map(issue => `
+                    <div class="debug-item">
+                        <span>
+                            <span class="debug-status debug-status-${issue.status}"></span>
+                            ${issue.name}
+                        </span>
+                        <span>${issue.status === 'error' ? '✗' : issue.status === 'ok' ? '✓' : '?'}</span>
+                    </div>
+                    <div style="font-size: 10px; margin-left: 15px; margin-bottom: 8px; color: rgba(16, 185, 129, 0.6);">
+                        ${issue.details}
+                    </div>
+                `).join('')}
+            `;
+        }
+
+        // Initialize debug panels
+        updateDebugPanel();
+
+        // Check browser compatibility
+        function checkBrowserCompatibility() {
+            const issue = debugIssues.right.find(i => i.id === 'browser-compat');
+            
+            // Check for modern browser features
+            const hasModernFeatures = 
+                'fetch' in window && 
+                'Promise' in window && 
+                'localStorage' in window &&
+                'JSON' in window;
+                
+            if (hasModernFeatures) {
+                issue.status = 'ok';
+                issue.details = 'Browser supports all required features';
+            } else {
+                issue.status = 'error';
+                issue.details = 'Browser missing required features';
+            }
+            updateDebugPanel();
+        }
+
+        // Check local storage
+        function checkLocalStorage() {
+            const issue = debugIssues.right.find(i => i.id === 'local-storage');
+            
+            try {
+                localStorage.setItem('test', 'test');
+                localStorage.removeItem('test');
+                issue.status = 'ok';
+                issue.details = 'Local storage is available';
+            } catch (e) {
+                issue.status = 'error';
+                issue.details = 'Local storage not available: ' + e.message;
+            }
+            updateDebugPanel();
+        }
+
+        // Check network connectivity
+        function checkNetworkConnectivity() {
+            const issue = debugIssues.left.find(i => i.id === 'network');
+            
+            if (navigator.onLine) {
+                issue.status = 'ok';
+                issue.details = 'Browser reports online status';
+            } else {
+                issue.status = 'error';
+                issue.details = 'Browser reports offline status';
+            }
+            updateDebugPanel();
+        }
+
+        // Check Fetch API
+        function checkFetchAPI() {
+            const issue = debugIssues.right.find(i => i.id === 'fetch-api');
+            
+            if ('fetch' in window) {
+                issue.status = 'ok';
+                issue.details = 'Fetch API is available';
+            } else {
+                issue.status = 'error';
+                issue.details = 'Fetch API not supported';
+            }
+            updateDebugPanel();
+        }
+
+        // Check Promise support
+        function checkPromiseSupport() {
+            const issue = debugIssues.right.find(i => i.id === 'promise-support');
+            
+            if ('Promise' in window) {
+                issue.status = 'ok';
+                issue.details = 'Promise API is available';
+            } else {
+                issue.status = 'error';
+                issue.details = 'Promise API not supported';
+            }
+            updateDebugPanel();
+        }
+
+        // Check for console errors
+        function setupConsoleErrorListener() {
+            const issue = debugIssues.right.find(i => i.id === 'console-logs');
+            const originalConsoleError = console.error;
+            let errorCount = 0;
+            
+            console.error = function() {
+                errorCount++;
+                issue.status = 'error';
+                issue.details = `${errorCount} errors logged to console`;
+                updateDebugPanel();
+                originalConsoleError.apply(console, arguments);
+            };
+            
+            issue.status = 'ok';
+            issue.details = 'No errors logged to console';
+            updateDebugPanel();
+        }
+
+        // Run initial checks
+        checkBrowserCompatibility();
+        checkLocalStorage();
+        checkNetworkConnectivity();
+        checkFetchAPI();
+        checkPromiseSupport();
+        setupConsoleErrorListener();
+
         async function getSongSuggestions(input) {
             const attemptFns = [
                 { name: 'Worker API', fn: tryWorkerAPI },
@@ -436,9 +667,54 @@
         }
 
         async function tryWorkerAPI(input) {
+            // Update worker URL check
+            const workerUrlIssue = debugIssues.left.find(i => i.id === 'worker-url');
+            workerUrlIssue.status = 'unknown';
+            workerUrlIssue.details = 'Attempting to connect...';
+            updateDebugPanel();
+            
+            // Update CORS issue check
+            const corsIssue = debugIssues.left.find(i => i.id === 'cors');
+            corsIssue.status = 'unknown';
+            corsIssue.details = 'Checking during request...';
+            updateDebugPanel();
+            
+            // Update API key check
+            const apiKeyIssue = debugIssues.left.find(i => i.id === 'api-key');
+            apiKeyIssue.status = 'unknown';
+            apiKeyIssue.details = 'Will be verified during request...';
+            updateDebugPanel();
+            
+            // Update rate limit check
+            const rateLimitIssue = debugIssues.left.find(i => i.id === 'rate-limit');
+            rateLimitIssue.status = 'unknown';
+            rateLimitIssue.details = 'Checking...';
+            updateDebugPanel();
+            
+            // Update response format check
+            const responseFormatIssue = debugIssues.left.find(i => i.id === 'response-format');
+            responseFormatIssue.status = 'unknown';
+            responseFormatIssue.details = 'Waiting for response...';
+            updateDebugPanel();
+            
+            // Update JSON parsing check
+            const jsonParsingIssue = debugIssues.right.find(i => i.id === 'json-parsing');
+            jsonParsingIssue.status = 'unknown';
+            jsonParsingIssue.details = 'Waiting for data to parse...';
+            updateDebugPanel();
+            
             for (let attempt = 1; attempt <= 3; attempt++) {
                 try {
                     console.log(`Worker API attempt ${attempt}/3`);
+                    
+                    // Log the request details for debugging
+                    console.log('Request details:', {
+                        url: WORKER_URL,
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: { mood: input }
+                    });
+                    
                     const response = await fetch(WORKER_URL, {
                         method: 'POST',
                         headers: {
@@ -448,37 +724,127 @@
                             mood: input
                         })
                     });
+                    
+                    // Worker URL is accessible
+                    workerUrlIssue.status = 'ok';
+                    workerUrlIssue.details = 'Connection successful';
+                    updateDebugPanel();
+                    
+                    // CORS is working if we got here
+                    corsIssue.status = 'ok';
+                    corsIssue.details = 'No CORS issues detected';
+                    updateDebugPanel();
 
                     if (!response.ok) {
-                        const data = await response.json().catch(() => ({}));
+                        const data = await response.json().catch(() => {
+                            jsonParsingIssue.status = 'error';
+                            jsonParsingIssue.details = 'Failed to parse error response JSON';
+                            updateDebugPanel();
+                            return {};
+                        });
+                        
                         console.error(`Worker API error:`, data);
+                        
+                        if (response.status === 401 || response.status === 403 || 
+                            (data.error && data.error.includes('API key'))) {
+                            apiKeyIssue.status = 'error';
+                            apiKeyIssue.details = 'API key invalid or missing';
+                            updateDebugPanel();
+                        }
+                        
                         if (response.status === 429) {
                             // Rate limit hit, wait and retry
+                            rateLimitIssue.status = 'error';
+                            rateLimitIssue.details = 'Rate limit exceeded';
+                            updateDebugPanel();
+                            
                             const waitTime = 1000 * Math.pow(2, attempt);
                             console.log(`Rate limited, waiting ${waitTime}ms before retry`);
                             await delay(waitTime);
                             continue;
                         }
+                        
                         throw new Error(data.error || `Worker API failed: ${response.status}`);
                     }
+                    
+                    // API key is valid if we got a successful response
+                    apiKeyIssue.status = 'ok';
+                    apiKeyIssue.details = 'API key is valid';
+                    updateDebugPanel();
+                    
+                    // Rate limit is ok
+                    rateLimitIssue.status = 'ok';
+                    rateLimitIssue.details = 'Under rate limit';
+                    updateDebugPanel();
 
-                    const data = await response.json();
+                    // Try to parse the JSON response
+                    let data;
+                    try {
+                        data = await response.json();
+                        jsonParsingIssue.status = 'ok';
+                        jsonParsingIssue.details = 'Successfully parsed JSON response';
+                        updateDebugPanel();
+                    } catch (e) {
+                        jsonParsingIssue.status = 'error';
+                        jsonParsingIssue.details = 'Failed to parse JSON: ' + e.message;
+                        updateDebugPanel();
+                        throw new Error('Invalid JSON response: ' + e.message);
+                    }
+                    
+                    // Check response format
                     if (!Array.isArray(data)) {
+                        responseFormatIssue.status = 'error';
+                        responseFormatIssue.details = 'Response is not an array';
+                        updateDebugPanel();
                         throw new Error('Invalid response format');
                     }
+                    
+                    responseFormatIssue.status = 'ok';
+                    responseFormatIssue.details = 'Response format is valid';
+                    updateDebugPanel();
+                    
                     return validateSongData(data);
                 } catch (error) {
                     console.error(`Worker API attempt ${attempt} failed:`, error);
-                    if (attempt === 3 || error.message.includes('Invalid')) {
-                        throw error; // Let the final error or validation errors propagate
-                    }
-                    // For network errors, wait and retry
+                    
+                    // Update debug panels based on error type
                     if (error.name === 'TypeError') {
+                        // Network error
+                        workerUrlIssue.status = 'error';
+                        workerUrlIssue.details = 'Failed to connect: ' + error.message;
+                        updateDebugPanel();
+                        
+                        const networkIssue = debugIssues.left.find(i => i.id === 'network');
+                        networkIssue.status = 'error';
+                        networkIssue.details = 'Network error: ' + error.message;
+                        updateDebugPanel();
+                        
+                        if (attempt === 3) {
+                            throw error;
+                        }
+                        
                         const waitTime = 1000 * Math.pow(2, attempt);
                         console.log(`Network error, waiting ${waitTime}ms before retry`);
                         await delay(waitTime);
                         continue;
+                    } else if (error.message.includes('CORS')) {
+                        corsIssue.status = 'error';
+                        corsIssue.details = 'CORS error: ' + error.message;
+                        updateDebugPanel();
+                    } else if (error.message.includes('Invalid response format')) {
+                        responseFormatIssue.status = 'error';
+                        responseFormatIssue.details = 'Invalid format: ' + error.message;
+                        updateDebugPanel();
+                    } else if (error.message.includes('API key')) {
+                        apiKeyIssue.status = 'error';
+                        apiKeyIssue.details = 'API key issue: ' + error.message;
+                        updateDebugPanel();
                     }
+                    
+                    if (attempt === 3 || error.message.includes('Invalid')) {
+                        throw error; // Let the final error or validation errors propagate
+                    }
+                    
                     throw error; // For other errors, fail fast
                 }
             }
