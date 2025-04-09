@@ -15,8 +15,8 @@
             align-items: center;
             background-color: #000000;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            /* *** CHANGED: Main color to pink *** */
-            color: #39A7FF; /* Was #39A7FF */
+            /* *** REVERTED: Main color to blue *** */
+            color: #39A7FF; /* Was #F472B6 */
             overflow-x: hidden; /* Prevent horizontal scroll */
         }
 
@@ -31,8 +31,8 @@
 
         .title-path {
             fill: none;
-            /* *** CHANGED: Subtle stroke to pink *** */
-            stroke: rgba(244, 114, 182, 0.15); /* Was rgba(57, 167, 255, 0.15) */
+            /* *** REVERTED: Subtle stroke to blue *** */
+            stroke: rgba(57, 167, 255, 0.15); /* Was rgba(244, 114, 182, 0.15) */
             stroke-width: 2;
             font-family: system-ui, -apple-system; /* Modern font */
             font-weight: 200; /* Lighter weight */
@@ -40,8 +40,8 @@
 
         .glow-path {
             fill: none;
-            /* *** CHANGED: Glow path to pink *** */
-            stroke: #F472B6; /* Was #39A7FF */
+            /* *** REVERTED: Glow path to blue *** */
+            stroke: #39A7FF; /* Was #F472B6 */
             stroke-width: 2;
             filter: url(#glow);
         }
@@ -60,26 +60,26 @@
             padding: 15px;
             font-size: 18px;
             background: transparent; /* Blend with background */
-            /* *** CHANGED: Input border to pink *** */
-            border: 2px solid #F472B6; /* Was #39A7FF */
+            /* *** REVERTED: Input border to blue *** */
+            border: 2px solid #39A7FF; /* Was #F472B6 */
             border-radius: 8px;
-            /* *** CHANGED: Input text color to pink *** */
-            color: #F472B6; /* Was #39A7FF */
+            /* *** REVERTED: Input text color to blue *** */
+            color: #39A7FF; /* Was #F472B6 */
             transition: all 0.3s ease;
             outline: none; /* Remove default outline */
             box-sizing: border-box; /* Include padding/border in width */
         }
 
         input[type="text"]:focus {
-            /* *** CHANGED: Input focus glow to pink *** */
-            box-shadow: 0 0 15px rgba(244, 114, 182, 0.5); /* Was rgba(57, 167, 255, 0.5) */
-            /* *** CHANGED: Input focus border to pink *** */
-            border-color: #F472B6; /* Was #39A7FF */
+            /* *** REVERTED: Input focus glow to blue *** */
+            box-shadow: 0 0 15px rgba(57, 167, 255, 0.5); /* Was rgba(244, 114, 182, 0.5) */
+            /* *** REVERTED: Input focus border to blue *** */
+            border-color: #39A7FF; /* Was #F472B6 */
         }
 
         input[type="text"]::placeholder {
-            /* *** CHANGED: Input placeholder to pink *** */
-            color: rgba(244, 114, 182, 0.5); /* Was rgba(57, 167, 255, 0.5) */
+            /* *** REVERTED: Input placeholder to blue *** */
+            color: rgba(57, 167, 255, 0.5); /* Was rgba(244, 114, 182, 0.5) */
         }
 
         /* --- Suggestions --- */
@@ -97,10 +97,10 @@
 
         /* --- Song Card --- */
         .song-card {
-            /* *** CHANGED: Song card background to pink tint *** */
-            background: rgba(244, 114, 182, 0.05); /* Was rgba(57, 167, 255, 0.05) */
-            /* *** CHANGED: Song card border to pink tint *** */
-            border: 1px solid rgba(244, 114, 182, 0.2); /* Was rgba(57, 167, 255, 0.2) */
+            /* *** REVERTED: Song card background to blue tint *** */
+            background: rgba(57, 167, 255, 0.05); /* Was rgba(244, 114, 182, 0.05) */
+            /* *** REVERTED: Song card border to blue tint *** */
+            border: 1px solid rgba(57, 167, 255, 0.2); /* Was rgba(244, 114, 182, 0.2) */
             border-radius: 12px; /* Softer corners */
             padding: 20px;
             /* Added transitions for selection */
@@ -118,23 +118,23 @@
 
         .song-card:hover, .song-card:focus { /* Add focus style for accessibility */
             transform: translateY(-2px); /* Slight lift effect */
-            /* *** CHANGED: Song card hover background to pink tint *** */
-            background: rgba(244, 114, 182, 0.1); /* Was rgba(57, 167, 255, 0.1) */
-            /* *** CHANGED: Song card hover border to pink tint *** */
-            border-color: rgba(244, 114, 182, 0.4); /* Was rgba(57, 167, 255, 0.4) */
-            /* *** CHANGED: Song card hover shadow to pink tint *** */
-            box-shadow: 0 4px 12px rgba(244, 114, 182, 0.1); /* Was rgba(57, 167, 255, 0.1) */
+            /* *** REVERTED: Song card hover background to blue tint *** */
+            background: rgba(57, 167, 255, 0.1); /* Was rgba(244, 114, 182, 0.1) */
+            /* *** REVERTED: Song card hover border to blue tint *** */
+            border-color: rgba(57, 167, 255, 0.4); /* Was rgba(244, 114, 182, 0.4) */
+            /* *** REVERTED: Song card hover shadow to blue tint *** */
+            box-shadow: 0 4px 12px rgba(57, 167, 255, 0.1); /* Was rgba(244, 114, 182, 0.1) */
             outline: none; /* Remove default focus outline if custom style is applied */
         }
 
         /* Style for selected song cards */
         .song-card.selected {
-            /* *** CHANGED: Selected border to pink *** */
-            border-color: #F472B6; /* Was #39A7FF */
-            /* *** CHANGED: Selected background to pink tint *** */
-            background-color: rgba(244, 114, 182, 0.15); /* Was rgba(57, 167, 255, 0.15) */
-            /* *** CHANGED: Selected shadow to pink tint *** */
-            box-shadow: 0 0 10px rgba(244, 114, 182, 0.5); /* Was rgba(57, 167, 255, 0.5) */
+            /* *** REVERTED: Selected border to blue *** */
+            border-color: #39A7FF; /* Was #F472B6 */
+            /* *** REVERTED: Selected background to blue tint *** */
+            background-color: rgba(57, 167, 255, 0.15); /* Was rgba(244, 114, 182, 0.15) */
+            /* *** REVERTED: Selected shadow to blue tint *** */
+            box-shadow: 0 0 10px rgba(57, 167, 255, 0.5); /* Was rgba(244, 114, 182, 0.5) */
             cursor: pointer; /* Change cursor back for selected items (clickable) */
         }
         .song-card.selected::after { /* Optional: Add a checkmark or indicator */
@@ -142,8 +142,8 @@
             position: absolute;
             top: 10px;
             right: 10px;
-            /* *** CHANGED: Checkmark to pink *** */
-            color: #F472B6; /* Was #39A7FF */
+            /* *** REVERTED: Checkmark to blue *** */
+            color: #39A7FF; /* Was #F472B6 */
             font-size: 20px;
             font-weight: bold;
         }
@@ -151,8 +151,8 @@
 
         .song-title { /* Combined styles for title */
             font-size: 18px;
-            /* *** CHANGED: Song title to pink *** */
-            color: rgba(244, 114, 182, 1); /* Was rgba(57, 167, 255, 1) */
+            /* *** REVERTED: Song title to blue *** */
+            color: rgba(57, 167, 255, 1); /* Was rgba(244, 114, 182, 1) */
             margin: 0 0 8px 0; /* Spacing below title */
             font-weight: 600; /* Bolder title */
             pointer-events: none; /* Prevent title from interfering with drag */
@@ -160,16 +160,16 @@
 
         .song-artist { /* Renamed from .artist for consistency */
             font-size: 16px;
-            /* *** CHANGED: Song artist to pink tint *** */
-            color: rgba(244, 114, 182, 0.8); /* Was rgba(57, 167, 255, 0.8) */
+            /* *** REVERTED: Song artist to blue tint *** */
+            color: rgba(57, 167, 255, 0.8); /* Was rgba(244, 114, 182, 0.8) */
             margin: 0 0 12px 0; /* Spacing below artist */
             pointer-events: none; /* Prevent artist from interfering with drag */
         }
 
         .song-details {
             font-size: 14px;
-            /* *** CHANGED: Song details to pink tint *** */
-            color: rgba(244, 114, 182, 0.6); /* Was rgba(57, 167, 255, 0.6) */
+            /* *** REVERTED: Song details to blue tint *** */
+            color: rgba(57, 167, 255, 0.6); /* Was rgba(244, 114, 182, 0.6) */
             margin: 0;
             line-height: 1.4; /* Improve readability */
             pointer-events: none; /* Prevent details from interfering with drag */
@@ -192,8 +192,8 @@
         .loading {
             text-align: center;
             padding: 20px;
-            /* *** CHANGED: Loading text to pink tint *** */
-            color: rgba(244, 114, 182, 0.9); /* Was rgba(57, 167, 255, 0.9) */
+            /* *** REVERTED: Loading text to blue tint *** */
+            color: rgba(57, 167, 255, 0.9); /* Was rgba(244, 114, 182, 0.9) */
             font-size: 18px;
             display: flex;
             align-items: center;
@@ -207,10 +207,10 @@
             content: '';
             width: 20px;
             height: 20px;
-            /* *** CHANGED: Loading spinner border to pink tint *** */
-            border: 2px solid rgba(244, 114, 182, 0.3); /* Was rgba(57, 167, 255, 0.3) */
-            /* *** CHANGED: Loading spinner top border to pink *** */
-            border-top: 2px solid #F472B6; /* Was #39A7FF */
+            /* *** REVERTED: Loading spinner border to blue tint *** */
+            border: 2px solid rgba(57, 167, 255, 0.3); /* Was rgba(244, 114, 182, 0.3) */
+            /* *** REVERTED: Loading spinner top border to blue *** */
+            border-top: 2px solid #39A7FF; /* Was #F472B6 */
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
@@ -229,8 +229,8 @@
         #drag-copy-controls {
             margin-top: 30px;
             padding: 20px;
-            /* *** CHANGED: Controls background to pink tint *** */
-            background-color: rgba(244, 114, 182, 0.05); /* Was rgba(57, 167, 255, 0.05) */
+            /* *** REVERTED: Controls background to blue tint *** */
+            background-color: rgba(57, 167, 255, 0.05); /* Was rgba(244, 114, 182, 0.05) */
             border-radius: 8px;
             width: 100%;
             max-width: 600px; /* Wider for instructions */
@@ -240,8 +240,8 @@
         #drag-copy-instructions {
              font-size: 14px;
              margin-bottom: 15px;
-             /* *** CHANGED: Instructions text to pink tint *** */
-             color: rgba(244, 114, 182, 0.8); /* Was rgba(57, 167, 255, 0.8) */
+             /* *** REVERTED: Instructions text to blue tint *** */
+             color: rgba(57, 167, 255, 0.8); /* Was rgba(244, 114, 182, 0.8) */
              line-height: 1.5;
         }
         #drag-copy-controls button {
@@ -251,14 +251,14 @@
             border: none;
             font-size: 16px;
             cursor: pointer;
-            /* *** CHANGED: Button background to pink *** */
-            background-color: #F472B6; /* Was #39A7FF */
-            color: #000; /* Black text on pink button */
+            /* *** REVERTED: Button background to blue *** */
+            background-color: #39A7FF; /* Was #F472B6 */
+            color: #000; /* Black text on blue button */
             transition: background-color 0.2s ease;
         }
         #drag-copy-controls button:hover:not(:disabled) {
-            /* *** CHANGED: Button hover to lighter pink *** */
-            background-color: #F8A1C8; /* Was #67BFFF */
+            /* *** REVERTED: Button hover to lighter blue *** */
+            background-color: #67BFFF; /* Was #F8A1C8 */
         }
          #drag-copy-controls button:disabled {
             background-color: #555;
@@ -269,8 +269,8 @@
             margin-top: 15px;
             font-size: 14px;
             min-height: 20px; /* Prevent layout shifts */
-            /* *** CHANGED: Status text to pink tint *** */
-            color: rgba(244, 114, 182, 0.9); /* Was rgba(57, 167, 255, 0.9) */
+            /* *** REVERTED: Status text to blue tint *** */
+            color: rgba(57, 167, 255, 0.9); /* Was rgba(244, 114, 182, 0.9) */
         }
 
 
@@ -280,8 +280,8 @@
             bottom: 10px;
             right: 10px;
             font-size: 12px;
-            /* *** CHANGED: Version counter to pink tint *** */
-            color: rgba(244, 114, 182, 0.5); /* Was rgba(57, 167, 255, 0.5) */
+            /* *** REVERTED: Version counter to blue tint *** */
+            color: rgba(57, 167, 255, 0.5); /* Was rgba(244, 114, 182, 0.5) */
             font-family: monospace; /* Monospace for version */
             z-index: 998; /* Keep above most elements */
         }
@@ -333,7 +333,7 @@
     <!-- Drag/Copy Controls Area (Initially Hidden) -->
     <div id="drag-copy-controls">
         <div id="drag-copy-instructions">
-            <!-- *** UPDATED INSTRUCTIONS *** -->
+            <!-- Instructions remain the same -->
             **Manual Spotify Add:** Drag a song card onto the Spotify app's **Search Bar** to search for it.<br>
             Or, click cards to select, then copy the list and paste into Spotify's Search Bar.<br>
             *(Direct drag-to-playlist from browser is not possible)*
@@ -344,7 +344,7 @@
 
 
     <!-- Version Counter -->
-    <div class="version-counter">v4.4-DragCopyPink</div> <!-- Updated version -->
+    <div class="version-counter">v4.4-DragCopyBlue</div> <!-- Updated version -->
 
     <script>
         // --- Configuration (AI) ---
