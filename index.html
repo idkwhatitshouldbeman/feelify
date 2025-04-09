@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Feelify</title>
     <style>
+        /* --- Base Styles --- */
         body {
             margin: 0;
             padding: 0;
@@ -18,11 +19,13 @@
             overflow-x: hidden;
         }
 
+        /* --- Title --- */
         .title-container {
             margin: 50px 0;
             position: relative;
-            width: 800px;
-            height: 200px;
+            width: 800px; /* Adjust as needed */
+            height: 200px; /* Adjust as needed */
+            max-width: 90%; /* Ensure responsiveness */
         }
 
         .title-path {
@@ -40,6 +43,7 @@
             filter: url(#glow);
         }
 
+        /* --- Input --- */
         .input-container {
             width: 100%;
             max-width: 500px;
@@ -70,6 +74,7 @@
             color: rgba(16, 185, 129, 0.5);
         }
 
+        /* --- Suggestions --- */
         .suggestions-container {
             width: 100%;
             max-width: 1200px;
@@ -78,70 +83,10 @@
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             gap: 20px;
+            box-sizing: border-box;
         }
 
-        .suggestion {
-            display: flex;
-            align-items: center;
-            padding: 15px;
-            margin: 10px 0;
-            border: 1px solid rgba(16, 185, 129, 0.3);
-            border-radius: 8px;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .suggestion::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(16, 185, 129, 0.1);
-            transform: translateX(-100%);
-            transition: transform 0.3s ease;
-        }
-
-        .suggestion:hover::before {
-            transform: translateX(0);
-        }
-
-        .suggestion:hover {
-            border-color: #10B981;
-            transform: translateY(-2px);
-        }
-
-        .album-art {
-            width: 50px;
-            height: 50px;
-            border-radius: 4px;
-            margin-right: 15px;
-            background: linear-gradient(45deg, #10B981, #065F46);
-            position: relative;
-            z-index: 1;
-        }
-
-        .suggestion-info {
-            flex-grow: 1;
-            position: relative;
-            z-index: 1;
-        }
-
-        .song-title {
-            font-size: 16px;
-            margin: 0;
-            font-weight: 500;
-        }
-
-        .artist {
-            font-size: 14px;
-            color: rgba(16, 185, 129, 0.7);
-            margin: 4px 0 0 0;
-        }
-
+        /* --- Song Card --- */
         .song-card {
             background: rgba(16, 185, 129, 0.05);
             border: 1px solid rgba(16, 185, 129, 0.2);
@@ -149,23 +94,27 @@
             padding: 20px;
             transition: all 0.3s ease;
             cursor: pointer;
+            /* Add accessibility roles */
+            role: button;
+            tabindex: 0;
         }
 
-        .song-card:hover {
+        .song-card:hover, .song-card:focus { /* Add focus style */
             transform: translateY(-2px);
             background: rgba(16, 185, 129, 0.1);
             border-color: rgba(16, 185, 129, 0.4);
             box-shadow: 0 4px 12px rgba(16, 185, 129, 0.1);
+            outline: none; /* Remove default focus outline if custom style is applied */
         }
 
-        .song-title {
+        .song-title { /* Combined styles */
             font-size: 18px;
             color: rgba(16, 185, 129, 1);
             margin: 0 0 8px 0;
             font-weight: 600;
         }
 
-        .song-artist {
+        .song-artist { /* Renamed from .artist for consistency */
             font-size: 16px;
             color: rgba(16, 185, 129, 0.8);
             margin: 0 0 12px 0;
@@ -178,6 +127,7 @@
             line-height: 1.4;
         }
 
+        /* --- UI Feedback --- */
         .error-message {
             text-align: center;
             padding: 20px;
@@ -188,20 +138,7 @@
             margin: 20px auto;
             max-width: 400px;
             animation: fadeIn 0.3s ease-out;
-        }
-
-        .version-counter {
-            position: fixed;
-            bottom: 10px;
-            right: 10px;
-            font-size: 12px;
-            color: rgba(16, 185, 129, 0.5);
-            font-family: monospace;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
+            grid-column: 1 / -1; /* Span across grid columns */
         }
 
         .loading {
@@ -213,33 +150,10 @@
             align-items: center;
             justify-content: center;
             gap: 12px;
+            grid-column: 1 / -1; /* Span across grid columns */
         }
 
-        .loading::after {
-            content: '';
-            display: inline-block;
-            width: 4px;
-            height: 4px;
-            background-color: currentColor;
-            border-radius: 50%;
-            animation: dots 1.4s infinite ease-in-out;
-            margin-left: 6px;
-        }
-
-        @keyframes dots {
-            0%, 80%, 100% { 
-                box-shadow: -10px 0 0 -4px currentColor, 0 0 0 currentColor, 10px 0 0 -4px currentColor;
-            }
-            40% { 
-                box-shadow: -10px 0 0 currentColor, 0 0 0 currentColor, 10px 0 0 -4px currentColor;
-            }
-            60% { 
-                box-shadow: -10px 0 0 -4px currentColor, 0 0 0 currentColor, 10px 0 0 currentColor;
-            }
-        }
-
-
-
+        /* Use only the spinner animation */
         .loading::after {
             content: '';
             width: 20px;
@@ -255,6 +169,22 @@
             100% { transform: rotate(360deg); }
         }
 
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- Diagnostics & Debugging --- */
+        .version-counter {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            font-size: 12px;
+            color: rgba(16, 185, 129, 0.5);
+            font-family: monospace;
+            z-index: 998;
+        }
+
         .diagnostics {
             position: fixed;
             bottom: 30px;
@@ -267,8 +197,9 @@
             border-radius: 4px;
             max-width: 300px;
             word-wrap: break-word;
+            z-index: 999;
         }
-        
+
         .debug-panel {
             position: fixed;
             top: 50%;
@@ -284,15 +215,10 @@
             max-height: 80vh;
             overflow-y: auto;
         }
-        
-        .debug-panel-left {
-            left: 10px;
-        }
-        
-        .debug-panel-right {
-            right: 10px;
-        }
-        
+
+        .debug-panel-left { left: 10px; }
+        .debug-panel-right { right: 10px; }
+
         .debug-title {
             font-size: 14px;
             font-weight: bold;
@@ -301,45 +227,31 @@
             border-bottom: 1px solid rgba(16, 185, 129, 0.3);
             padding-bottom: 5px;
         }
-        
+
         .debug-item {
             margin-bottom: 8px;
             display: flex;
             justify-content: space-between;
+            align-items: center;
         }
-        
+
         .debug-status {
             display: inline-block;
             width: 10px;
             height: 10px;
             border-radius: 50%;
             margin-right: 5px;
+            flex-shrink: 0;
         }
-        
-        .debug-status-ok {
-            background-color: #10B981;
-        }
-        
-        .debug-status-warning {
-            background-color: #F59E0B;
-        }
-        
-        .debug-status-error {
-            background-color: #EF4444;
-        }
-        
-        .debug-status-unknown {
-            background-color: #6B7280;
-        }
+        .debug-status-ok { background-color: #10B981; }
+        .debug-status-warning { background-color: #F59E0B; }
+        .debug-status-error { background-color: #EF4444; }
+        .debug-status-unknown { background-color: #6B7280; }
 
         .attempt-row {
             margin: 4px 0;
             display: flex;
             align-items: center;
-        }
-
-        .attempt-pending {
-            background-color: rgba(16, 185, 129, 0.2);
         }
 
         .attempt-indicator {
@@ -348,31 +260,31 @@
             height: 8px;
             border-radius: 50%;
             margin-right: 5px;
+            flex-shrink: 0;
         }
-
-        .attempt-active {
-            background-color: #10B981;
-            animation: pulse 1s infinite;
-        }
-
-        .attempt-success {
-            background-color: #10B981;
-        }
-
-        .attempt-failed {
-            background-color: #EF4444;
-        }
+        .attempt-pending { background-color: rgba(16, 185, 129, 0.2); }
+        .attempt-active { background-color: #10B981; animation: pulse 1s infinite; }
+        .attempt-success { background-color: #10B981; }
+        .attempt-failed { background-color: #EF4444; }
 
         @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.5; }
-            100% { opacity: 1; }
+            0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; }
+        }
+
+        /* --- Accessibility --- */
+        .visually-hidden {
+            position: absolute;
+            left: -10000px;
+            top: auto;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
         }
     </style>
 </head>
 <body>
     <div class="title-container">
-        <svg viewBox="0 0 800 200">
+        <svg viewBox="0 0 800 200" preserveAspectRatio="xMidYMid meet">
             <defs>
                 <filter id="glow">
                     <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur" />
@@ -383,101 +295,85 @@
                     <circle id="mask-circle" r="50" cx="-100" cy="-100" fill="black"/>
                 </mask>
             </defs>
-            <text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" 
+            <text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle"
                   font-size="140px" class="title-path">
                 Feelify
             </text>
-            <text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" 
+            <text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle"
                   font-size="140px" class="glow-path" mask="url(#hover-mask)">
                 Feelify
             </text>
         </svg>
     </div>
+
     <div class="input-container">
+        <!-- Add accessible label -->
+        <label for="feelInput" class="visually-hidden">How are you feeling?</label>
         <input type="text" id="feelInput" placeholder="How are you feeling? (Press Enter)" autofocus>
     </div>
-    <div class="suggestions-container" id="suggestions"></div>
-    <div class="version-counter">v3.14</div>
+
+    <!-- Add aria-live for screen reader announcements -->
+    <div class="suggestions-container" id="suggestions" aria-live="polite"></div>
+
+    <div class="version-counter">v3.16-AIML</div> <!-- Updated version -->
     <div id="diagnostics" class="diagnostics"></div>
     <div id="debug-panel-left" class="debug-panel debug-panel-left"></div>
     <div id="debug-panel-right" class="debug-panel debug-panel-right"></div>
 
     <script>
-        // Worker Configuration
-        const WORKER_URL = 'https://feelify.aarohkandy.workers.dev';
-        
-        // Enhanced song database with more detailed information
+        // --- Configuration ---
+        // !! EXTREME SECURITY WARNING !!
+        // Hardcoding API keys in client-side code is HIGHLY INSECURE and exposes your key.
+        // Anyone viewing the page source can steal and use it, potentially incurring costs.
+        // Use this ONLY for personal, local testing. Replace with a backend proxy for production.
+        const AIMLAPI_KEY = '92494b76982f48a49b18266ede6e4af0'; // <-- PASTE YOUR ACTUAL AIMLAPI KEY HERE
+        const AIMLAPI_BASE_URL = 'https://api.aimlapi.com/v1';
+        const AIMLAPI_MODEL = 'gpt-4o'; // Or another model supported by AIMLAPI
+
+        // Enhanced song database (for fallback)
         const songDatabase = [
-            { title: "Happy", artist: "Pharrell Williams", description: "An upbeat pop song that radiates pure joy and positivity" },
-            { title: "Don't Stop Believin'", artist: "Journey", description: "An inspiring rock anthem about hope and perseverance" },
-            { title: "Dancing Queen", artist: "ABBA", description: "A vibrant disco hit that makes you want to dance" },
-            { title: "Walking on Sunshine", artist: "Katrina & The Waves", description: "A cheerful pop song about feeling on top of the world" },
-            { title: "I Wanna Dance with Somebody", artist: "Whitney Houston", description: "An energetic pop anthem about finding love and joy in dancing" },
-            { title: "Sweet Dreams", artist: "Eurythmics", description: "A haunting synth-pop classic with a dreamy, mysterious atmosphere" },
-            { title: "I Will Survive", artist: "Gloria Gaynor", description: "A powerful disco anthem about overcoming heartbreak and finding strength" },
-            { title: "Eye of the Tiger", artist: "Survivor", description: "A powerful rock anthem that fuels determination and strength" },
-            { title: "Stayin' Alive", artist: "Bee Gees", description: "A groovy disco classic that exudes confidence and style" },
-            { title: "Good Vibrations", artist: "The Beach Boys", description: "A feel-good summer hit with uplifting harmonies" }
+            { title: "Happy", artist: "Pharrell Williams", genre: "Pop", year: "2013" },
+            { title: "Don't Stop Believin'", artist: "Journey", genre: "Rock", year: "1981" },
+            { title: "Dancing Queen", artist: "ABBA", genre: "Disco", year: "1976" },
+            { title: "Walking on Sunshine", artist: "Katrina & The Waves", genre: "Pop Rock", year: "1985" },
+            { title: "I Wanna Dance with Somebody", artist: "Whitney Houston", genre: "Pop", year: "1987" },
+            { title: "Sweet Dreams", artist: "Eurythmics", genre: "Synth-pop", year: "1983" },
+            { title: "I Will Survive", artist: "Gloria Gaynor", genre: "Disco", year: "1978" },
+            { title: "Eye of the Tiger", artist: "Survivor", genre: "Hard Rock", year: "1982" },
+            { title: "Stayin' Alive", artist: "Bee Gees", genre: "Disco", year: "1977" },
+            { title: "Good Vibrations", artist: "The Beach Boys", genre: "Psychedelic Pop", year: "1966" }
+            // Add more songs if desired
         ];
 
-        // Handle title glow effect
+        // --- DOM Elements ---
         const titleContainer = document.querySelector('.title-container');
         const maskCircle = document.querySelector('#mask-circle');
-        
-        titleContainer.addEventListener('mousemove', (e) => {
-            const rect = titleContainer.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            
-            maskCircle.setAttribute('cx', x);
-            maskCircle.setAttribute('cy', y);
-        });
-
-        titleContainer.addEventListener('mouseleave', () => {
-            maskCircle.setAttribute('cx', -100);
-            maskCircle.setAttribute('cy', -100);
-        });
-
-        // Handle song suggestions
-        let currentSuggestions = [];
         const suggestionsContainer = document.getElementById('suggestions');
         const feelInput = document.getElementById('feelInput');
+        const diagnostics = document.getElementById('diagnostics');
+        const leftDebugPanel = document.getElementById('debug-panel-left');
+        const rightDebugPanel = document.getElementById('debug-panel-right');
 
-        // Error handling configuration
-        const MAX_RETRIES = 3;
-        const RETRY_DELAY = 1000;
-        const FALLBACK_URL = 'https://openrouter.ai/api/v1/chat/completions';
-        let currentAttempt = 1;
+        // --- State Variables ---
+        let currentSuggestions = [];
+        // isLoadingMore removed as infinite scroll simulation is removed
 
+        // --- Error Handling & Retry Configuration ---
+        const MAX_RETRIES = 3; // Max retries specifically for the API call function
+        const RETRY_DELAY = 1000; // Initial delay, increases exponentially
+
+        // --- Diagnostics & Debugging ---
         const attempts = [
-            { name: 'Worker API', status: '', details: 'Not tried yet' },
+            { name: 'AIMLAPI', status: '', details: 'Not tried yet' }, // Updated name
             { name: 'Cached Results', status: '', details: 'Not tried yet' },
             { name: 'Local Fallback', status: '', details: 'Not tried yet' },
             { name: 'Emergency Mode', status: '', details: 'Not tried yet' }
         ];
 
-        function updateDiagnostics(attempt, status, details = '') {
-            const diagnostics = document.getElementById('diagnostics');
-            attempts[attempt - 1].status = status;
-            attempts[attempt - 1].details = details;
-
-            diagnostics.innerHTML = attempts.map((a, i) => `
-                <div class="attempt-row">
-                    <span class="attempt-indicator ${a.status || 'attempt-pending'}"></span>
-                    ${a.name}: ${a.details}
-                </div>
-            `).join('');
-        }
-
-        async function delay(ms) {
-            return new Promise(resolve => setTimeout(resolve, ms));
-        }
-
-        // Debug panel configuration
         const debugIssues = {
             left: [
                 { id: 'network', name: 'Network Connectivity', status: 'unknown', details: 'Checking...' },
-                { id: 'worker-url', name: 'Worker URL Accessible', status: 'unknown', details: 'Checking...' },
+                { id: 'api-url', name: 'API URL Accessible', status: 'unknown', details: 'Checking...' }, // Generic name
                 { id: 'cors', name: 'CORS Issues', status: 'unknown', details: 'Checking...' },
                 { id: 'api-key', name: 'API Key Valid', status: 'unknown', details: 'Checking...' },
                 { id: 'rate-limit', name: 'Rate Limit Exceeded', status: 'unknown', details: 'Checking...' },
@@ -493,12 +389,28 @@
             ]
         };
 
+        // --- Utility Functions ---
+        function updateDiagnostics(attemptIndex, status, details = '') {
+            if (attemptIndex > 0 && attemptIndex <= attempts.length) {
+                attempts[attemptIndex - 1].status = status;
+                attempts[attemptIndex - 1].details = details;
+
+                diagnostics.innerHTML = attempts.map((a, i) => `
+                    <div class="attempt-row">
+                        <span class="attempt-indicator ${a.status || 'attempt-pending'}"></span>
+                        ${a.name}: ${a.details}
+                    </div>
+                `).join('');
+            }
+        }
+
+        async function delay(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
         function updateDebugPanel() {
-            const leftPanel = document.getElementById('debug-panel-left');
-            const rightPanel = document.getElementById('debug-panel-right');
-            
-            leftPanel.innerHTML = `
-                <div class="debug-title">Potential Server Issues</div>
+            leftDebugPanel.innerHTML = `
+                <div class="debug-title">Potential Server/API Issues</div>
                 ${debugIssues.left.map(issue => `
                     <div class="debug-item">
                         <span>
@@ -507,13 +419,13 @@
                         </span>
                         <span>${issue.status === 'error' ? '✗' : issue.status === 'ok' ? '✓' : '?'}</span>
                     </div>
-                    <div style="font-size: 10px; margin-left: 15px; margin-bottom: 8px; color: rgba(16, 185, 129, 0.6);">
+                    <div style="font-size: 10px; margin-left: 20px; margin-bottom: 8px; color: rgba(16, 185, 129, 0.6);">
                         ${issue.details}
                     </div>
                 `).join('')}
             `;
-            
-            rightPanel.innerHTML = `
+
+            rightDebugPanel.innerHTML = `
                 <div class="debug-title">Potential Client Issues</div>
                 ${debugIssues.right.map(issue => `
                     <div class="debug-item">
@@ -523,460 +435,464 @@
                         </span>
                         <span>${issue.status === 'error' ? '✗' : issue.status === 'ok' ? '✓' : '?'}</span>
                     </div>
-                    <div style="font-size: 10px; margin-left: 15px; margin-bottom: 8px; color: rgba(16, 185, 129, 0.6);">
+                    <div style="font-size: 10px; margin-left: 20px; margin-bottom: 8px; color: rgba(16, 185, 129, 0.6);">
                         ${issue.details}
                     </div>
                 `).join('')}
             `;
         }
 
-        // Initialize debug panels
-        updateDebugPanel();
-
-        // Check browser compatibility
-        function checkBrowserCompatibility() {
-            const issue = debugIssues.right.find(i => i.id === 'browser-compat');
-            
-            // Check for modern browser features
-            const hasModernFeatures = 
-                'fetch' in window && 
-                'Promise' in window && 
-                'localStorage' in window &&
-                'JSON' in window;
-                
-            if (hasModernFeatures) {
-                issue.status = 'ok';
-                issue.details = 'Browser supports all required features';
-            } else {
-                issue.status = 'error';
-                issue.details = 'Browser missing required features';
+        function updateDebugIssue(panel, id, status, details) {
+            const issue = debugIssues[panel].find(i => i.id === id);
+            if (issue) {
+                issue.status = status;
+                issue.details = details;
+                updateDebugPanel();
             }
-            updateDebugPanel();
         }
 
-        // Check local storage
-        function checkLocalStorage() {
-            const issue = debugIssues.right.find(i => i.id === 'local-storage');
-            
+        // --- Initial Checks ---
+        function runInitialChecks() {
+            // Browser Compatibility
+            const hasModernFeatures = 'fetch' in window && 'Promise' in window && 'localStorage' in window && 'JSON' in window;
+            updateDebugIssue('right', 'browser-compat', hasModernFeatures ? 'ok' : 'error', hasModernFeatures ? 'Browser supports required features' : 'Browser missing required features');
+
+            // Local Storage
             try {
-                localStorage.setItem('test', 'test');
-                localStorage.removeItem('test');
-                issue.status = 'ok';
-                issue.details = 'Local storage is available';
+                localStorage.setItem('feelify_test', 'test');
+                localStorage.removeItem('feelify_test');
+                updateDebugIssue('right', 'local-storage', 'ok', 'Local storage is available');
             } catch (e) {
-                issue.status = 'error';
-                issue.details = 'Local storage not available: ' + e.message;
+                updateDebugIssue('right', 'local-storage', 'error', 'Local storage not available: ' + e.message);
             }
-            updateDebugPanel();
-        }
 
-        // Check network connectivity
-        function checkNetworkConnectivity() {
-            const issue = debugIssues.left.find(i => i.id === 'network');
-            
-            if (navigator.onLine) {
-                issue.status = 'ok';
-                issue.details = 'Browser reports online status';
-            } else {
-                issue.status = 'error';
-                issue.details = 'Browser reports offline status';
-            }
-            updateDebugPanel();
-        }
+            // Network Connectivity
+            updateDebugIssue('left', 'network', navigator.onLine ? 'ok' : 'warning', navigator.onLine ? 'Browser reports online' : 'Browser reports offline');
+            window.addEventListener('online', () => updateDebugIssue('left', 'network', 'ok', 'Browser reports online'));
+            window.addEventListener('offline', () => updateDebugIssue('left', 'network', 'warning', 'Browser reports offline'));
 
-        // Check Fetch API
-        function checkFetchAPI() {
-            const issue = debugIssues.right.find(i => i.id === 'fetch-api');
-            
-            if ('fetch' in window) {
-                issue.status = 'ok';
-                issue.details = 'Fetch API is available';
-            } else {
-                issue.status = 'error';
-                issue.details = 'Fetch API not supported';
-            }
-            updateDebugPanel();
-        }
 
-        // Check Promise support
-        function checkPromiseSupport() {
-            const issue = debugIssues.right.find(i => i.id === 'promise-support');
-            
-            if ('Promise' in window) {
-                issue.status = 'ok';
-                issue.details = 'Promise API is available';
-            } else {
-                issue.status = 'error';
-                issue.details = 'Promise API not supported';
-            }
-            updateDebugPanel();
-        }
+            // Feature Checks
+            updateDebugIssue('right', 'fetch-api', 'fetch' in window ? 'ok' : 'error', 'fetch' in window ? 'Fetch API available' : 'Fetch API not supported');
+            updateDebugIssue('right', 'promise-support', 'Promise' in window ? 'ok' : 'error', 'Promise' in window ? 'Promise API available' : 'Promise API not supported');
 
-        // Check for console errors
-        function setupConsoleErrorListener() {
-            const issue = debugIssues.right.find(i => i.id === 'console-logs');
+            // Console Error Listener
             const originalConsoleError = console.error;
             let errorCount = 0;
-            
             console.error = function() {
                 errorCount++;
-                issue.status = 'error';
-                issue.details = `${errorCount} errors logged to console`;
-                updateDebugPanel();
+                updateDebugIssue('right', 'console-logs', 'error', `${errorCount} error(s) logged`);
                 originalConsoleError.apply(console, arguments);
             };
-            
-            issue.status = 'ok';
-            issue.details = 'No errors logged to console';
-            updateDebugPanel();
+            updateDebugIssue('right', 'console-logs', 'ok', 'Monitoring console errors');
         }
 
-        // Run initial checks
-        checkBrowserCompatibility();
-        checkLocalStorage();
-        checkNetworkConnectivity();
-        checkFetchAPI();
-        checkPromiseSupport();
-        setupConsoleErrorListener();
+        // --- Core Logic ---
 
         async function getSongSuggestions(input) {
             const attemptFns = [
-                { name: 'Worker API', fn: tryWorkerAPI },
+                { name: 'AIMLAPI', fn: tryAIMLAPI }, // Updated
                 { name: 'Cached Results', fn: tryCachedResults },
                 { name: 'Local Fallback', fn: tryLocalFallback },
                 { name: 'Emergency Mode', fn: tryEmergencyMode }
             ];
 
-            // Reset all attempt statuses
+            // Reset all attempt statuses before starting
             attempts.forEach((a, i) => updateDiagnostics(i + 1, '', 'Not tried yet'));
+            // Reset relevant debug issues
+            ['api-url', 'cors', 'api-key', 'rate-limit', 'response-format', 'json-parsing'].forEach(id => {
+                const panel = debugIssues.left.some(i => i.id === id) ? 'left' : 'right';
+                updateDebugIssue(panel, id, 'unknown', 'Checking...');
+            });
+
 
             for (let i = 0; i < attemptFns.length; i++) {
                 const attempt = attemptFns[i];
+                const attemptIndex = i + 1;
                 try {
-                    updateDiagnostics(i + 1, 'attempt-active', `Trying now...`);
-                    const result = await attempt.fn(input);
-                    updateDiagnostics(i + 1, 'attempt-success', `Success`);
+                    updateDiagnostics(attemptIndex, 'attempt-active', `Trying now...`);
+                    const result = await attempt.fn(input); // Pass input to the function
+                    updateDiagnostics(attemptIndex, 'attempt-success', `Success`);
+
+                    // Cache successful results from API or fallback
+                    if (i < 2 && result && result.length > 0) { // Only cache API or local fallback results
+                         try {
+                            localStorage.setItem(`songs_${input}`, JSON.stringify(result));
+                            updateDebugIssue('right', 'local-storage', 'ok', 'Cached results successfully');
+                         } catch (e) {
+                            updateDebugIssue('right', 'local-storage', 'warning', 'Failed to cache results: ' + e.message);
+                         }
+                    }
                     return result;
                 } catch (error) {
                     console.error(`${attempt.name} failed:`, error);
-                    updateDiagnostics(i + 1, 'attempt-failed', error.message);
-                    await delay(RETRY_DELAY);
+                    updateDiagnostics(attemptIndex, 'attempt-failed', error.message || 'Unknown error');
+                    // Don't retry automatically here, let the loop handle fallback
+                    // Optional: Add a small delay between fallbacks if desired
+                    // if (i < attemptFns.length - 1) await delay(200);
                 }
             }
-            throw new Error('All attempts failed');
+            // If all attempts failed
+            updateDebugIssue('left', 'api-url', 'error', 'All methods failed');
+            throw new Error('All attempts to fetch suggestions failed.');
         }
 
-        async function tryWorkerAPI(input) {
-            // Update worker URL check
-            const workerUrlIssue = debugIssues.left.find(i => i.id === 'worker-url');
-            workerUrlIssue.status = 'unknown';
-            workerUrlIssue.details = 'Attempting to connect...';
-            updateDebugPanel();
-            
-            // Update CORS issue check
-            const corsIssue = debugIssues.left.find(i => i.id === 'cors');
-            corsIssue.status = 'unknown';
-            corsIssue.details = 'Checking during request...';
-            updateDebugPanel();
-            
-            // Update API key check
-            const apiKeyIssue = debugIssues.left.find(i => i.id === 'api-key');
-            apiKeyIssue.status = 'unknown';
-            apiKeyIssue.details = 'Will be verified during request...';
-            updateDebugPanel();
-            
-            // Update rate limit check
-            const rateLimitIssue = debugIssues.left.find(i => i.id === 'rate-limit');
-            rateLimitIssue.status = 'unknown';
-            rateLimitIssue.details = 'Checking...';
-            updateDebugPanel();
-            
-            // Update response format check
-            const responseFormatIssue = debugIssues.left.find(i => i.id === 'response-format');
-            responseFormatIssue.status = 'unknown';
-            responseFormatIssue.details = 'Waiting for response...';
-            updateDebugPanel();
-            
-            // Update JSON parsing check
-            const jsonParsingIssue = debugIssues.right.find(i => i.id === 'json-parsing');
-            jsonParsingIssue.status = 'unknown';
-            jsonParsingIssue.details = 'Waiting for data to parse...';
-            updateDebugPanel();
-            
-            for (let attempt = 1; attempt <= 3; attempt++) {
+        async function tryAIMLAPI(input) {
+            // Check if API key is placeholder
+            if (!AIMLAPI_KEY || AIMLAPI_KEY === '<YOUR_AIMLAPI_KEY>') {
+                 updateDebugIssue('left', 'api-key', 'error', 'API Key is missing or placeholder');
+                 throw new Error('AIMLAPI Key is not configured.');
+            }
+
+            updateDebugIssue('left', 'api-url', 'unknown', 'Attempting connection...');
+            updateDebugIssue('left', 'cors', 'unknown', 'Checking during request...');
+            updateDebugIssue('left', 'api-key', 'unknown', 'Will be verified by API...');
+            updateDebugIssue('left', 'rate-limit', 'unknown', 'Checking...');
+            updateDebugIssue('left', 'response-format', 'unknown', 'Waiting for response...');
+            updateDebugIssue('right', 'json-parsing', 'unknown', 'Waiting for data...');
+
+            const systemPrompt = `You are a helpful assistant that suggests songs based on a user's mood.
+Respond ONLY with a valid JSON array of song objects. Each object must have the following keys: "title", "artist", "genre", and "year".
+Do not include any introductory text, explanations, markdown formatting (like \`\`\`json), or anything else outside the JSON array.
+Example format: [{"title": "Song Title", "artist": "Artist Name", "genre": "Pop", "year": "2020"}]`;
+
+            const apiUrl = `${AIMLAPI_BASE_URL}/chat/completions`;
+
+            for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
                 try {
-                    console.log(`Worker API attempt ${attempt}/3`);
-                    
-                    // Log the request details for debugging
-                    console.log('Request details:', {
-                        url: WORKER_URL,
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: { mood: input }
-                    });
-                    
-                    const response = await fetch(WORKER_URL, {
+                    console.log(`AIMLAPI attempt ${attempt}/${MAX_RETRIES}`);
+                    updateDiagnostics(1, 'attempt-active', `Trying API (Attempt ${attempt}/${MAX_RETRIES})...`); // Update diagnostics for retries
+
+                    const response = await fetch(apiUrl, {
                         method: 'POST',
                         headers: {
+                            'Authorization': `Bearer ${AIMLAPI_KEY}`,
                             'Content-Type': 'application/json'
                         },
                         body: JSON.stringify({
-                            mood: input
+                            model: AIMLAPI_MODEL,
+                            messages: [
+                                { role: "system", content: systemPrompt },
+                                { role: "user", content: `Suggest 5 songs for someone feeling: ${input}` }
+                            ],
+                            // Optional: Adjust temperature for creativity vs consistency
+                            // temperature: 0.7,
+                            // Optional: Limit response length
+                            // max_tokens: 500
                         })
                     });
-                    
-                    // Worker URL is accessible
-                    workerUrlIssue.status = 'ok';
-                    workerUrlIssue.details = 'Connection successful';
-                    updateDebugPanel();
-                    
-                    // CORS is working if we got here
-                    corsIssue.status = 'ok';
-                    corsIssue.details = 'No CORS issues detected';
-                    updateDebugPanel();
+
+                    updateDebugIssue('left', 'api-url', 'ok', `Connected (${response.status})`);
+                    updateDebugIssue('left', 'cors', 'ok', 'No CORS issues detected'); // Assume ok if fetch didn't throw CORS error
 
                     if (!response.ok) {
-                        const data = await response.json().catch(() => {
-                            jsonParsingIssue.status = 'error';
-                            jsonParsingIssue.details = 'Failed to parse error response JSON';
-                            updateDebugPanel();
-                            return {};
-                        });
-                        
-                        console.error(`Worker API error:`, data);
-                        
-                        if (response.status === 401 || response.status === 403 || 
-                            (data.error && data.error.includes('API key'))) {
-                            apiKeyIssue.status = 'error';
-                            apiKeyIssue.details = 'API key invalid or missing';
-                            updateDebugPanel();
+                        let errorData = { message: `API request failed with status ${response.status}` };
+                        try {
+                            errorData = await response.json(); // Try to get more details
+                            updateDebugIssue('right', 'json-parsing', 'ok', 'Parsed error response JSON');
+                        } catch (e) {
+                             updateDebugIssue('right', 'json-parsing', 'error', 'Failed to parse error response JSON');
+                             console.error("Failed to parse error response body:", response.statusText);
                         }
-                        
-                        if (response.status === 429) {
-                            // Rate limit hit, wait and retry
-                            rateLimitIssue.status = 'error';
-                            rateLimitIssue.details = 'Rate limit exceeded';
-                            updateDebugPanel();
-                            
-                            const waitTime = 1000 * Math.pow(2, attempt);
-                            console.log(`Rate limited, waiting ${waitTime}ms before retry`);
-                            await delay(waitTime);
-                            continue;
-                        }
-                        
-                        throw new Error(data.error || `Worker API failed: ${response.status}`);
-                    }
-                    
-                    // API key is valid if we got a successful response
-                    apiKeyIssue.status = 'ok';
-                    apiKeyIssue.details = 'API key is valid';
-                    updateDebugPanel();
-                    
-                    // Rate limit is ok
-                    rateLimitIssue.status = 'ok';
-                    rateLimitIssue.details = 'Under rate limit';
-                    updateDebugPanel();
 
-                    // Try to parse the JSON response
-                    let data;
-                    try {
-                        data = await response.json();
-                        jsonParsingIssue.status = 'ok';
-                        jsonParsingIssue.details = 'Successfully parsed JSON response';
-                        updateDebugPanel();
-                    } catch (e) {
-                        jsonParsingIssue.status = 'error';
-                        jsonParsingIssue.details = 'Failed to parse JSON: ' + e.message;
-                        updateDebugPanel();
-                        throw new Error('Invalid JSON response: ' + e.message);
-                    }
-                    
-                    // Check response format
-                    if (!Array.isArray(data)) {
-                        responseFormatIssue.status = 'error';
-                        responseFormatIssue.details = 'Response is not an array';
-                        updateDebugPanel();
-                        throw new Error('Invalid response format');
-                    }
-                    
-                    responseFormatIssue.status = 'ok';
-                    responseFormatIssue.details = 'Response format is valid';
-                    updateDebugPanel();
-                    
-                    return validateSongData(data);
-                } catch (error) {
-                    console.error(`Worker API attempt ${attempt} failed:`, error);
-                    
-                    // Update debug panels based on error type
-                    if (error.name === 'TypeError') {
-                        // Network error
-                        workerUrlIssue.status = 'error';
-                        workerUrlIssue.details = 'Failed to connect: ' + error.message;
-                        updateDebugPanel();
-                        
-                        const networkIssue = debugIssues.left.find(i => i.id === 'network');
-                        networkIssue.status = 'error';
-                        networkIssue.details = 'Network error: ' + error.message;
-                        updateDebugPanel();
-                        
-                        if (attempt === 3) {
-                            throw error;
+                        // AIMLAPI might use 'detail' instead of 'error.message' sometimes
+                        const errorMessage = errorData?.error?.message || errorData?.detail || errorData.message || `HTTP error ${response.status}`;
+                        console.error(`AIMLAPI error (${response.status}):`, errorMessage, errorData);
+
+                        if (response.status === 401 || response.status === 403) {
+                            updateDebugIssue('left', 'api-key', 'error', `Authentication failed: ${errorMessage}`);
+                            throw new Error(`API Key Invalid or Permission Denied: ${errorMessage}`); // Fail fast on auth errors
+                        } else if (response.status === 429) {
+                            updateDebugIssue('left', 'rate-limit', 'error', `Rate limit exceeded: ${errorMessage}`);
+                            if (attempt < MAX_RETRIES) {
+                                const waitTime = RETRY_DELAY * Math.pow(2, attempt -1); // Exponential backoff
+                                console.log(`Rate limited. Retrying in ${waitTime}ms...`);
+                                updateDiagnostics(1, 'attempt-active', `Rate limited. Retrying in ${waitTime/1000}s...`);
+                                await delay(waitTime);
+                                continue; // Retry
+                            } else {
+                                throw new Error(`Rate limit exceeded after ${MAX_RETRIES} attempts.`);
+                            }
+                        } else {
+                            updateDebugIssue('left', 'api-url', 'error', `API Error: ${errorMessage}`);
+                            throw new Error(`API Error (${response.status}): ${errorMessage}`);
                         }
-                        
-                        const waitTime = 1000 * Math.pow(2, attempt);
-                        console.log(`Network error, waiting ${waitTime}ms before retry`);
-                        await delay(waitTime);
-                        continue;
-                    } else if (error.message.includes('CORS')) {
-                        corsIssue.status = 'error';
-                        corsIssue.details = 'CORS error: ' + error.message;
-                        updateDebugPanel();
-                    } else if (error.message.includes('Invalid response format')) {
-                        responseFormatIssue.status = 'error';
-                        responseFormatIssue.details = 'Invalid format: ' + error.message;
-                        updateDebugPanel();
-                    } else if (error.message.includes('API key')) {
-                        apiKeyIssue.status = 'error';
-                        apiKeyIssue.details = 'API key issue: ' + error.message;
-                        updateDebugPanel();
                     }
-                    
-                    if (attempt === 3 || error.message.includes('Invalid')) {
-                        throw error; // Let the final error or validation errors propagate
+
+                    // If response is OK
+                    updateDebugIssue('left', 'api-key', 'ok', 'API key appears valid');
+                    updateDebugIssue('left', 'rate-limit', 'ok', 'Within rate limits');
+
+                    let responseData;
+                    try {
+                        responseData = await response.json();
+                        updateDebugIssue('right', 'json-parsing', 'ok', 'Parsed API response JSON');
+                    } catch (e) {
+                        updateDebugIssue('right', 'json-parsing', 'error', 'Failed to parse success response JSON: ' + e.message);
+                        throw new Error('Invalid JSON response from API');
                     }
-                    
-                    throw error; // For other errors, fail fast
+
+
+                    // Extract content and parse the inner JSON
+                    const aiContent = responseData?.choices?.[0]?.message?.content;
+                    if (!aiContent) {
+                        updateDebugIssue('left', 'response-format', 'error', 'No content found in API response choices');
+                        throw new Error('Invalid response structure from API');
+                    }
+
+                    try {
+                        // Attempt to parse the content string as JSON
+                        // Trim potential markdown fences or extra whitespace
+                        const cleanedContent = aiContent.trim().replace(/^```json\s*|```$/g, '');
+                        const songs = JSON.parse(cleanedContent);
+                         if (!Array.isArray(songs)) {
+                            updateDebugIssue('left', 'response-format', 'error', 'AI response content is not a JSON array');
+                            throw new Error('AI did not return a valid JSON array');
+                         }
+                        updateDebugIssue('left', 'response-format', 'ok', 'Valid JSON array received from AI');
+                        return validateSongData(songs); // Validate the structure
+                    } catch (e) {
+                        console.error("Failed to parse AI content as JSON:", aiContent, e);
+                        updateDebugIssue('left', 'response-format', 'error', 'AI content is not valid JSON: ' + e.message);
+                        throw new Error('Failed to parse song data from AI response');
+                    }
+
+                } catch (error) {
+                    console.error(`AIMLAPI attempt ${attempt} failed:`, error);
+
+                    // Update debug panels based on error type
+                    if (error.name === 'TypeError' && !navigator.onLine) { // Likely network error
+                        updateDebugIssue('left', 'network', 'error', 'Network error during fetch: ' + error.message);
+                        updateDebugIssue('left', 'api-url', 'error', 'Failed to connect (Network Issue)');
+                    } else if (error.message.includes('API Key Invalid')) {
+                         updateDebugIssue('left', 'api-key', 'error', error.message);
+                    } else if (error.message.includes('Rate limit exceeded')) {
+                         updateDebugIssue('left', 'rate-limit', 'error', error.message);
+                    }
+                    // Add more specific error checks if needed
+
+                    if (attempt === MAX_RETRIES) {
+                        throw error; // Throw the final error after all retries
+                    }
+                    // If it's not a rate limit error and not the last attempt, fail fast
+                     if (!error.message.includes('Rate limit exceeded')) {
+                         throw error; // Fail fast on non-retriable errors
+                     }
+                     // If it was a rate limit error, the 'continue' statement handled the retry delay.
                 }
             }
+             // Should not be reached if MAX_RETRIES > 0, but acts as a safeguard
+             throw new Error('AIMLAPI failed after all retries.');
         }
 
-        // Direct API removed for security (API key should not be in frontend)
 
         async function tryCachedResults(input) {
-            const cached = localStorage.getItem(`songs_${input}`);
-            if (cached) {
-                return JSON.parse(cached);
+            try {
+                const cached = localStorage.getItem(`songs_${input}`);
+                if (cached) {
+                    updateDebugIssue('right', 'local-storage', 'ok', 'Found cached results');
+                    const songs = JSON.parse(cached);
+                    updateDebugIssue('right', 'json-parsing', 'ok', 'Parsed cached results');
+                    return songs;
+                } else {
+                    updateDebugIssue('right', 'local-storage', 'warning', 'No cached results found for this input');
+                    throw new Error('No cached results');
+                }
+            } catch (e) {
+                 updateDebugIssue('right', 'local-storage', 'error', 'Error accessing cache: ' + e.message);
+                 updateDebugIssue('right', 'json-parsing', 'error', 'Failed to parse cached data');
+                 throw new Error('Failed to retrieve cached results');
             }
-            throw new Error('No cached results');
         }
 
         function tryLocalFallback(input) {
-            const moodMap = {
-                happy: [0, 1, 2],
-                sad: [3, 4, 5],
-                energetic: [6, 7, 8],
-                relaxed: [9, 10, 11]
-            };
+             // Use the more detailed songDatabase with keyword matching
+            const lowerInput = input.toLowerCase();
+            let matchingSongs = [];
 
-            const mood = Object.keys(moodMap).find(m => input.toLowerCase().includes(m));
-            if (mood) {
-                return moodMap[mood].map(i => songDatabase[i]);
+            // Simple keyword matching (can be expanded)
+            if (lowerInput.includes('happy') || lowerInput.includes('joyful') || lowerInput.includes('upbeat')) {
+                matchingSongs = songDatabase.filter(s => ['Pop', 'Disco', 'Pop Rock'].includes(s.genre) || s.title === "Happy" || s.title === "Walking on Sunshine");
+            } else if (lowerInput.includes('sad') || lowerInput.includes('down') || lowerInput.includes('blue') || lowerInput.includes('melancholy')) {
+                matchingSongs = songDatabase.filter(s => s.genre === 'Synth-pop' || s.title === "I Will Survive"); // Example
+            } else if (lowerInput.includes('energetic') || lowerInput.includes('pumped') || lowerInput.includes('motivated') || lowerInput.includes('power')) {
+                matchingSongs = songDatabase.filter(s => ['Rock', 'Hard Rock', 'Pop Rock'].includes(s.genre) || s.title === "Eye of the Tiger");
+            } else if (lowerInput.includes('relaxed') || lowerInput.includes('chill') || lowerInput.includes('calm')) {
+                 matchingSongs = songDatabase.filter(s => s.genre === 'Psychedelic Pop' || s.genre === 'Synth-pop'); // Example
             }
+
+            // If no specific keywords match, provide a general selection
+            if (matchingSongs.length === 0) {
+                 matchingSongs = songDatabase.slice(0, 5); // Return first 5 as a general fallback
+            } else {
+                 matchingSongs = matchingSongs.slice(0, 5); // Limit results
+            }
+
+
+            if (matchingSongs.length > 0) {
+                 updateDebugIssue('right', 'browser-compat', 'ok', 'Used local song database fallback'); // Reusing a debug slot
+                 return validateSongData(matchingSongs); // Ensure consistent format
+            }
+
+            updateDebugIssue('right', 'browser-compat', 'warning', 'No matching local songs found');
             throw new Error('No matching local songs');
         }
 
+
         function tryEmergencyMode(input) {
-            return [{
+            updateDebugIssue('right', 'browser-compat', 'ok', 'Activated emergency mode'); // Reusing slot
+            // Return a single, clearly marked emergency song
+            return validateSongData([{
                 title: 'Emergency Song',
-                artist: 'System',
-                genre: 'Any',
-                year: '2025',
-                description: 'Generated when all other attempts failed'
-            }];
+                artist: 'System Fallback',
+                genre: 'Fallback',
+                year: new Date().getFullYear().toString() // Current year
+            }]);
         }
 
         function validateSongData(data) {
+            // Ensures the data has the expected structure, providing defaults
             if (!Array.isArray(data)) {
-                throw new Error('Invalid song data format');
+                 console.error("Validation Error: Data is not an array", data);
+                 updateDebugIssue('left', 'response-format', 'error', 'Data received for validation is not an array');
+                 return []; // Return empty array as a safe fallback
             }
-            return data.map(song => ({
-                title: song.title || 'Unknown Title',
-                artist: song.artist || 'Unknown Artist',
-                genre: song.genre || 'Unknown Genre',
-                year: song.year || 'Unknown Year'
-            }));
+            const validated = data.map(song => ({
+                title: song?.title || 'Unknown Title',
+                artist: song?.artist || 'Unknown Artist',
+                genre: song?.genre || 'Unknown Genre',
+                year: String(song?.year || 'N/A') // Ensure year is a string
+            })).filter(song => song.title !== 'Unknown Title'); // Filter out entries that are completely invalid
+
+             if (validated.length !== data.length) {
+                 console.warn("Some song entries were filtered during validation due to missing titles.");
+                 updateDebugIssue('left', 'response-format', 'warning', 'Some song entries lacked titles');
+             } else if (validated.length > 0) {
+                 updateDebugIssue('left', 'response-format', 'ok', 'Song data structure appears valid');
+             }
+
+            return validated;
         }
 
-        function extractJSONFromText(text) {
-            try {
-                const match = text.match(/\[([\s\S]*?)\]/);
-                return match ? JSON.parse(match[0]) : [];
-            } catch (e) {
-                console.error('JSON extraction failed:', e);
-                return [];
-            }
-        }
-
+        // --- UI Functions ---
         function displaySuggestion(song) {
             const div = document.createElement('div');
             div.className = 'song-card';
+            div.setAttribute('role', 'button'); // Accessibility
+            div.setAttribute('tabindex', '0');  // Accessibility
             div.innerHTML = `
                 <h3 class="song-title">${song.title}</h3>
                 <p class="song-artist">${song.artist}</p>
                 <p class="song-details">${song.genre} • ${song.year}</p>
             `;
+            // Add event listener for click/keyboard interaction if needed later
+            // div.addEventListener('click', () => { /* Action for song */ });
+            // div.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { /* Action for song */ } });
             suggestionsContainer.appendChild(div);
         }
 
+        function displayLoading() {
+            suggestionsContainer.innerHTML = `
+                <div class="loading">Finding the perfect songs for your mood</div>
+            `;
+             // Set ARIA busy state
+             suggestionsContainer.setAttribute('aria-busy', 'true');
+        }
+
+        function displayError(message) {
+             // Sanitize message slightly (basic)
+             const safeMessage = message.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+             suggestionsContainer.innerHTML = `<div class="error-message">${safeMessage}</div>`;
+             suggestionsContainer.removeAttribute('aria-busy'); // Clear busy state
+        }
+
+        function clearSuggestions() {
+            suggestionsContainer.innerHTML = '';
+            suggestionsContainer.removeAttribute('aria-busy'); // Clear busy state
+        }
+
+
         async function handleInput() {
             const input = feelInput.value.trim();
-            if (input.length > 0) {
-                feelInput.disabled = true;
-                suggestionsContainer.innerHTML = `
-                    <div class="loading">Finding the perfect songs for your mood</div>
-                `;
-                try {
-                    currentSuggestions = await getSongSuggestions(input);
-                    suggestionsContainer.innerHTML = '';
-                    if (currentSuggestions.length > 0) {
-                        currentSuggestions.forEach(displaySuggestion);
-                    } else {
-                        throw new Error('No songs found for this mood. Try expressing your feeling differently.');
+            if (input.length === 0) {
+                clearSuggestions();
+                return;
+            }
+
+            feelInput.disabled = true;
+            displayLoading();
+
+            try {
+                currentSuggestions = await getSongSuggestions(input);
+                clearSuggestions(); // Clear loading message
+
+                if (currentSuggestions && currentSuggestions.length > 0) {
+                    currentSuggestions.forEach(displaySuggestion);
+                } else {
+                    // Handle case where validation might return empty or API returns empty valid array
+                    displayError('No songs found for this mood. Try expressing your feeling differently.');
+                    // Update diagnostics if API succeeded but returned no songs (assuming API was the successful attempt)
+                    if (attempts[0].status === 'attempt-success') {
+                        updateDiagnostics(1, 'attempt-failed', 'No songs returned');
                     }
-                } catch (error) {
-                    console.error('Error:', error);
-                    let errorMessage = error.message;
-                    if (errorMessage.includes('Failed to fetch')) {
-                        errorMessage = 'Unable to connect to the server. Please check your internet connection.';
-                    } else if (errorMessage.includes('rate limit')) {
-                        errorMessage = 'We\'re getting too many requests. Please wait a moment and try again.';
-                    } else if (errorMessage.includes('token')) {
-                        errorMessage = 'There\'s an issue with the API connection. Please try again later.';
-                    }
-                    suggestionsContainer.innerHTML = `<div class="error-message">${errorMessage}</div>`;
-                } finally {
-                    feelInput.disabled = false;
-                    feelInput.focus();
                 }
-            } else {
-                suggestionsContainer.innerHTML = '';
+            } catch (error) {
+                console.error('Error in handleInput:', error);
+                let userErrorMessage = error.message || 'An unexpected error occurred.';
+                // Make error messages slightly more user-friendly
+                if (userErrorMessage.includes('Failed to fetch') || userErrorMessage.includes('Network error')) {
+                    userErrorMessage = 'Unable to connect. Please check your internet connection and try again.';
+                     updateDebugIssue('left', 'network', 'error', 'Failed to fetch during input handling');
+                } else if (userErrorMessage.includes('Rate limit exceeded')) {
+                    userErrorMessage = 'Feeling too popular! Too many requests right now. Please wait a moment and try again.';
+                } else if (userErrorMessage.includes('API Key Invalid') || userErrorMessage.includes('Authentication failed') || userErrorMessage.includes('AIMLAPI Key is not configured')) {
+                    userErrorMessage = 'There seems to be an issue connecting to the suggestion service (Auth/Config). Please try again later.';
+                } else if (userErrorMessage.includes('All attempts to fetch suggestions failed')) {
+                     userErrorMessage = 'Could not find suggestions using any method. Please try again later or check the debug panels.';
+                } else if (userErrorMessage.includes('Failed to parse song data') || userErrorMessage.includes('Invalid response structure') || userErrorMessage.includes('AI did not return a valid JSON array')) {
+                     userErrorMessage = 'Received an unexpected response from the suggestion service. Please try again.';
+                }
+
+                displayError(userErrorMessage);
+            } finally {
+                feelInput.disabled = false;
+                // Don't refocus immediately if there was an error, user might want to read it
+                if (!suggestionsContainer.querySelector('.error-message')) {
+                   feelInput.focus();
+                }
+                 suggestionsContainer.removeAttribute('aria-busy'); // Ensure busy state is cleared
             }
         }
 
-        // Handle Enter key only
+        // --- Event Listeners ---
+
+        // Title Glow Effect
+        titleContainer.addEventListener('mousemove', (e) => {
+            const rect = titleContainer.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            maskCircle.setAttribute('cx', x);
+            maskCircle.setAttribute('cy', y);
+        });
+        titleContainer.addEventListener('mouseleave', () => {
+            maskCircle.setAttribute('cx', -100);
+            maskCircle.setAttribute('cy', -100);
+        });
+
+        // Input Handling (Enter Key)
         feelInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
+                e.preventDefault(); // Prevent potential form submission
                 handleInput();
             }
         });
 
-        // Infinite scroll simulation
-        let isLoading = false;
-        window.addEventListener('scroll', () => {
-            if (!isLoading && (window.innerHeight + window.scrollY) >= document.body.offsetHeight - 100) {
-                isLoading = true;
-                const loadingMsg = document.createElement('div');
-                loadingMsg.className = 'loading';
-                loadingMsg.textContent = 'Loading more suggestions...';
-                suggestionsContainer.appendChild(loadingMsg);
-                
-                setTimeout(() => {
-                    loadingMsg.remove();
-                    currentSuggestions.forEach(displaySuggestion);
-                    isLoading = false;
-                }, 800);
-            }
-        });
+        // Infinite Scroll Simulation Removed
+
+        // --- Initialization ---
+        runInitialChecks(); // Run checks when script loads
+        updateDebugPanel(); // Initial render of debug panels
+        updateDiagnostics(0, '', ''); // Initial render of diagnostics panel
 
     </script>
 </body>
